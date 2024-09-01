@@ -22,12 +22,20 @@ return new class extends Migration
             $table->longText('post_html');
             $table->text('summary')->nullable(false);
             $table->date('publish_date')->nullable(false);
-            //llaves foráneas
+            // Llave foránea para la relación con Author
             $table->foreignId('author_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            // Llave foránea para la relación con Category
             $table->foreignId('category_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            // Llave foránea para la relación con User
+            $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
