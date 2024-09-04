@@ -24,6 +24,5 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Nuevas rutas un post
     Route::resource('posts', App\Http\Controllers\PostController::class);
 });

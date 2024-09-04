@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Latest Posts</h1>
+    <h1 class="text-2xl font-bold mb-4">Últimos Posts</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         v-for="post in posts"
