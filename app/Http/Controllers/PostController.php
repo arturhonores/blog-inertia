@@ -12,7 +12,7 @@ class PostController extends Controller
     public function index()
     {
         // Obtenemos los primeros 10 posts ordenados por fecha de publicación
-        $posts = Post::orderBy('publish_date', 'desc')->take(10)->get();
+        $posts = Post::orderBy('publish_date', 'desc')->get();
         //inicial
         return Inertia::render('Posts/Index', ['posts' => $posts]);
     }
