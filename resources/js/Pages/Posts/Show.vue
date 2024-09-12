@@ -19,7 +19,7 @@ const props = defineProps({
             <div>
                 <h1 class="text-3xl">{{ post.title }}</h1>
                 <p>{{ post.summary }}</p>
-                <img class="w-full" :src="post.image_post_url" alt="">
+                <img class="w-full h-auto" :src="post.image_post_url" alt="">
                 <p>{{ post.post_html }}</p>
                 <div class="w-16">
                     <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundo.png" alt="mundo" width="100%">

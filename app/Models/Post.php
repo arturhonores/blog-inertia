@@ -11,6 +11,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Post extends Model
 {
     use HasFactory;
+    // Campos que se pueden asignar masivamente
+    protected $fillable = [
+        'title',
+        'slug',
+        'meta_title',
+        'meta_description',
+        'image_post_url',
+        'image_card_url',
+        'post_html',
+        'summary',
+        'publish_date',
+        'author_id',
+        'category_id',
+        'user_id',
+    ];
 
     //relación uno a muchos inversa
     public function user(): BelongsTo
