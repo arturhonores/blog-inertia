@@ -10,9 +10,20 @@ const props = defineProps({
 <template>
     <AppLayout title="Posts">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Post
-            </h2>
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Post
+                </h2>
+                <div class="flex gap-4">
+                    <a :href="route('posts.edit', post.id)"
+                        class="flex items-center gap-1 cursor-pointer text-green-600"><span><img
+                                src="https://blogfap.s3.eu-north-1.amazonaws.com/edit-icon.svg" alt="edit icon"
+                                width="16px"></span><span>Editar</span></a>
+                    <a class="flex items-center gap-1 cursor-pointer text-red-600"><span><img
+                                src="https://blogfap.s3.eu-north-1.amazonaws.com/delete-icon.svg" alt="edit icon"
+                                width="16px"></span><span>Eliminar</span></a>
+                </div>
+            </div>
         </template>
 
         <div class="container mx-auto py-7 max-w-5xl px-6">
