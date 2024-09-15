@@ -29,7 +29,14 @@ const form = useForm({
 
 // Función para enviar la actualización del formulario
 function submit() {
-    form.put(route('posts.update', props.post.id)); // Usamos 'put' para la actualización
+    form.put(route('posts.update', props.post.id), {
+        onSuccess: () => {
+            console.log('Post actualizado con éxito.');
+        },
+        onError: (errors) => {
+            console.error('Errores de validación:', errors);
+        }
+    });
 }
 
 // Computed properties para los select de autores y categorías
