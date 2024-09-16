@@ -14,6 +14,8 @@ const props = defineProps({
 // Límite de caracteres para el título
 const TITLE_MAX_LENGTH = 255;
 const META_TITLE_MAX_LENGTH = 100;
+const META_DESCRIPTION_MAX_LENGTH = 200;
+const SUMMARY_MAX_LENGTH = 180;
 
 // Inicializar formulario
 const form = useForm({
@@ -30,9 +32,11 @@ const form = useForm({
     category_id: '',
 });
 
-// Estado para el contador de caracteres del título
+// Estado para el contador de caracteres
 const titleLength = ref(0);
 const metaTitleLength = ref(0);
+const metaDescriptionLength = ref(0)
+const summaryLength = ref(0)
 
 
 // Watch para generar el slug y contar los caracteres del título
@@ -44,6 +48,16 @@ watch(() => form.title, (newTitle) => {
 // Watch para contar los caracteres del meta título
 watch(() => form.meta_title, (newMetaTitle) => {
     metaTitleLength.value = newMetaTitle.length;
+});
+
+// Watch para contar los caracteres del meta descripción
+watch(() => form.meta_description, (newMetaDescription) => {
+    metaDescriptionLength.value = newMetaDescription.length;
+});
+
+// Watch para contar los caracteres del resumen
+watch(() => form.summary, (newSummary) => {
+    summaryLength.value = newSummary.length;
 });
 
 // Función para validar campos y enviar el formulario
@@ -77,7 +91,8 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                                 <p>Max. caracteres: {{ TITLE_MAX_LENGTH }}</p>
                             </div>
                         </div>
-                        <TextInput id="title" v-model="form.title" class="block w-full mt-1" type="text" />
+                        <TextInput id="title" v-model="form.title" class="block w-full mt-1" type="text"
+                            :maxlength="TITLE_MAX_LENGTH" />
                         <!-- Mostrar errores del backend -->
                         <p v-if="form.errors.title" class="text-red-500">{{ form.errors.title }}</p>
                     </div>
@@ -102,15 +117,22 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                                 <p>Max. caracteres: {{ META_TITLE_MAX_LENGTH }}</p>
                             </div>
                         </div>
-                        <TextInput id="meta_title" v-model="form.meta_title" class="block w-full mt-1" type="text" />
+                        <TextInput id="meta_title" v-model="form.meta_title" class="block w-full mt-1" type="text"
+                            :maxlength="META_TITLE_MAX_LENGTH" />
                         <p v-if="form.errors.meta_title" class="text-red-500">{{ form.errors.meta_title }}</p>
                     </div>
 
                     <!-- Meta Descripción -->
                     <div class="mb-4">
-                        <InputLabel for="meta_description" value="Meta Descripción" />
-                        <textarea id="meta_description" v-model="form.meta_description"
-                            class="block w-full mt-1"></textarea>
+                        <div class="flex justify-between">
+                            <InputLabel for="meta_description" value="Meta Descripción" />
+                            <div class="flex gap-4 text-xs">
+                                <p>Nº caracteres: {{ metaDescriptionLength }}</p>
+                                <p>Max. caracteres: {{ META_DESCRIPTION_MAX_LENGTH }}</p>
+                            </div>
+                        </div>
+                        <TextInput id="meta_description" v-model="form.meta_description" class="block w-full mt-1"
+                            type="text" :maxlength="META_DESCRIPTION_MAX_LENGTH" />
                         <p v-if="form.errors.meta_description" class="text-red-500">{{ form.errors.meta_description }}
                         </p>
                     </div>
@@ -140,8 +162,15 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
 
                     <!-- Resumen -->
                     <div class="mb-4">
-                        <InputLabel for="summary" value="Resumen" />
-                        <textarea id="summary" v-model="form.summary" class="block w-full mt-1"></textarea>
+                        <div class="flex justify-between">
+                            <InputLabel for="summary" value="Resumen" />
+                            <div class="flex gap-4 text-xs">
+                                <p>Nº caracteres: {{ summaryLength }}</p>
+                                <p>Max. caracteres: {{ SUMMARY_MAX_LENGTH }}</p>
+                            </div>
+                        </div>
+                        <textarea id="summary" v-model="form.summary" class="block w-full mt-1"
+                            :maxlength="SUMMARY_MAX_LENGTH"></textarea>
                         <p v-if="form.errors.summary" class="text-red-500">{{ form.errors.summary }}</p>
                     </div>
 

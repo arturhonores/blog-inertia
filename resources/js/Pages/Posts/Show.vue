@@ -1,10 +1,32 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import Modal from '@/Components/Modal.vue';
+import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 
 // Definir las props que se reciben desde el backend
 const props = defineProps({
     post: Object,
 });
+
+// Estado para controlar la visibilidad del modal y el formulario
+const showModal = ref(false);
+const form = useForm({});
+
+// Función para mostrar el modal de confirmación
+function confirmDelete() {
+    showModal.value = true;
+}
+
+// Función para eliminar el post
+function deletePost() {
+    form.delete(route('posts.destroy', props.post.id), {
+        onSuccess: () => {
+            showModal.value = false;
+        },
+    });
+}
+
 </script>
 
 <template>
@@ -19,7 +41,7 @@ const props = defineProps({
                         class="flex items-center gap-1 cursor-pointer text-green-600"><span><img
                                 src="https://blogfap.s3.eu-north-1.amazonaws.com/edit-icon.svg" alt="edit icon"
                                 width="16px"></span><span>Editar</span></a>
-                    <a class="flex items-center gap-1 cursor-pointer text-red-600"><span><img
+                    <a @click="confirmDelete" class="flex items-center gap-1 cursor-pointer text-red-600"><span><img
                                 src="https://blogfap.s3.eu-north-1.amazonaws.com/delete-icon.svg" alt="edit icon"
                                 width="16px"></span><span>Eliminar</span></a>
                 </div>
@@ -38,6 +60,18 @@ const props = defineProps({
                 <p>© 2024 Formación Activa Profesional</p>
             </div>
         </div>
+
+        <!-- Modal de confirmación de eliminación -->
+        <Modal :show="showModal" @close="showModal = false">
+            <template #title>Confirmar eliminación</template>
+            <template #content>
+                ¿Estás seguro de que deseas eliminar este post? Esta acción no se puede deshacer.
+            </template>
+            <template #footer>
+                <button @click="showModal = false" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+                <button @click="deletePost" class="px-4 py-2 bg-red-500 text-white rounded-lg ms-2">Eliminar</button>
+            </template>
+        </Modal>
 
     </AppLayout>
 </template>
