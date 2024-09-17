@@ -11,7 +11,11 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
-
+    safelist: [
+        'bg-neutral-900',
+        'text-white',
+        // Agrega aquí cualquier otra clase que necesites
+    ],
     theme: {
         extend: {
             fontFamily: {

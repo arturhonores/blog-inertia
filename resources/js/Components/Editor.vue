@@ -62,15 +62,17 @@ onBeforeUnmount(() => {
         <section v-if="editor && editor.isEditable"
             class="buttons flex items-center flex-wrap gap-x-3 border-t border-l border-r border-gray-300 p-4">
             <button type="button" @click="editor.chain().focus().toggleBold().run()"
-                :disabled="!editor.can().chain().focus().toggleBold().run()"
-                :class="{ 'bg-neutral-900 text-white': editor.isActive('bold') }"
-                class="px-2 py-1 font-bold bg-stone-200 rounded-lg w-8">
+                :disabled="!editor.can().chain().focus().toggleBold().run()" :class="[
+                    'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
+                    editor.isActive('bold') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+                ]">
                 B
             </button>
             <button type="button" @click="editor.chain().focus().toggleItalic().run()"
-                :disabled="!editor.can().chain().focus().toggleItalic().run()"
-                :class="{ 'bg-neutral-900 text-white': editor.isActive('italic') }"
-                class="px-2 py-1 font-bold bg-stone-200 rounded-lg italic w-8">
+                :disabled="!editor.can().chain().focus().toggleItalic().run()" :class="[
+                    'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
+                    editor.isActive('italic') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+                ]">
                 I
             </button>
             <!-- Agrega más botones si lo necesitas -->
