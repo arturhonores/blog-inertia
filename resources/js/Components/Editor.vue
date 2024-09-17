@@ -2,6 +2,7 @@
 import { watch, onBeforeUnmount } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
 
 const props = defineProps({
     modelValue: String,
@@ -14,7 +15,7 @@ const editor = useEditor({
     content:
         props.modelValue ||
         '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto 🎉</p>',
-    extensions: [StarterKit],
+    extensions: [StarterKit, Underline],
     editorProps: {
         attributes: {
             class:
@@ -75,7 +76,13 @@ onBeforeUnmount(() => {
                 ]">
                 I
             </button>
-            <!-- Agrega más botones si lo necesitas -->
+            <button type="button" @click="editor.chain().focus().toggleUnderline().run()"
+                :disabled="!editor.can().chain().focus().toggleUnderline().run()" :class="[
+                    'px-2 py-1 font-bold rounded-lg w-8', // Clases por defecto
+                    editor.isActive('underline') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+                ]">
+                U
+            </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />
     </div>
