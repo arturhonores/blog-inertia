@@ -3,6 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Editor from '@/Components/Editor.vue';
 import { ref, computed, watch } from 'vue';
 import slugify from 'slugify'; // generar slug
 
@@ -58,6 +59,11 @@ watch(() => form.meta_description, (newMetaDescription) => {
 // Watch para contar los caracteres del resumen
 watch(() => form.summary, (newSummary) => {
     summaryLength.value = newSummary.length;
+});
+
+// Watch para el contenido del editor
+watch(() => form.post_html, (newContent) => {
+    // Aquí puedes realizar acciones adicionales cuando el contenido del editor cambie, si es necesario.
 });
 
 // Función para validar campos y enviar el formulario
@@ -154,9 +160,16 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     </div>
 
                     <!-- Contenido del Post (HTML) -->
-                    <div class="mb-4">
+                    <!-- <div class="mb-4">
                         <InputLabel for="post_html" value="Contenido del Post" />
                         <textarea id="post_html" v-model="form.post_html" class="block w-full mt-1"></textarea>
+                        <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
+                    </div> -->
+
+                    <!-- Contenido del Post (HTML) usando el componente Editor -->
+                    <div class="mb-4">
+                        <InputLabel for="post_html" value="Contenido del Post" />
+                        <Editor v-model="form.post_html" />
                         <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
                     </div>
 
