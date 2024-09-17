@@ -50,10 +50,10 @@ function deletePost() {
 
         <div class="container mx-auto py-7 max-w-5xl px-6">
             <div>
-                <h1 class="text-3xl">{{ post.title }}</h1>
-                <p>{{ post.summary }}</p>
+                <h1 class="text-3xl mb-3">{{ post.title }}</h1>
+                <p class="mb-3">{{ post.summary }}</p>
                 <img class="w-full h-auto" :src="post.image_post_url" alt="">
-                <p>{{ post.post_html }}</p>
+                <div v-html="post.post_html" class="my-3"></div>
                 <div class="w-16">
                     <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundo.png" alt="mundo" width="100%">
                 </div>
