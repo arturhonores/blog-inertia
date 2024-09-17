@@ -19,10 +19,12 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
+        "@tiptap/extension-link": "^2.7.0",
         "@tiptap/extension-underline": "^2.7.0",
         "@tiptap/pm": "^2.7.0",
         "@tiptap/starter-kit": "^2.7.0",
         "@tiptap/vue-3": "^2.7.0",
+        "lucide-vue-next": "^0.441.0",
         "slugify": "^1.6.6"
     }
 }

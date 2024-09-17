@@ -3,6 +3,8 @@ import { watch, onBeforeUnmount } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
+import { Link as LinkIcon } from 'lucide-vue-next';
 
 const props = defineProps({
     modelValue: String,
@@ -15,7 +17,18 @@ const editor = useEditor({
     content:
         props.modelValue ||
         '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto 🎉</p>',
-    extensions: [StarterKit, Underline],
+    extensions: [
+        StarterKit,
+        Underline,
+        Link.configure({
+            openOnClick: true,
+            defaultProtocol: 'https',
+            HTMLAttributes: {
+                class: 'text-blue-500 underline cursor-pointer',
+                target: '_blank',
+                rel: 'noopener noreferrer',
+            },
+        }),],
     editorProps: {
         attributes: {
             class:
@@ -50,6 +63,28 @@ watch(
     { immediate: true }
 );
 
+// Función para agregar o eliminar enlaces
+const addOrRemoveLink = () => {
+    if (editor.value) {
+        if (editor.value.isActive('link')) {
+            // Si el enlace está activo, lo eliminamos
+            editor.value.chain().focus().unsetLink().run();
+        } else {
+            // Si el enlace no está activo, solicitamos la URL al usuario
+            let url = prompt('Introduce la URL del enlace:');
+            if (url) {
+                // Validar y formatear la URL
+                if (!/^https?:\/\//i.test(url)) {
+                    url = 'https://' + url;
+                }
+
+                // Ejecutar el comando para agregar el enlace
+                editor.value.chain().focus().setLink({ href: url }).run();
+            }
+        }
+    }
+};
+
 // Limpiar el editor cuando se desmonte el componente
 onBeforeUnmount(() => {
     if (editor.value) {
@@ -82,6 +117,13 @@ onBeforeUnmount(() => {
                     editor.isActive('underline') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
                 ]">
                 U
+            </button>
+            <button type="button" @click="addOrRemoveLink" :disabled="!editor.can().chain().focus().toggleLink().run()"
+                :class="[
+                    'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
+                    editor.isActive('link') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+                ]">
+                <LinkIcon :size="18" />
             </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />
