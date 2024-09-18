@@ -159,13 +159,6 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                         <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
                     </div>
 
-                    <!-- Contenido del Post (HTML) -->
-                    <!-- <div class="mb-4">
-                        <InputLabel for="post_html" value="Contenido del Post" />
-                        <textarea id="post_html" v-model="form.post_html" class="block w-full mt-1"></textarea>
-                        <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
-                    </div> -->
-
                     <!-- Contenido del Post (HTML) usando el componente Editor -->
                     <div class="mb-4">
                         <InputLabel for="post_html" value="Contenido del Post" />

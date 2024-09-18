@@ -5,6 +5,8 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import { Link as LinkIcon } from 'lucide-vue-next';
+import { List } from 'lucide-vue-next';
+import { ListOrdered } from 'lucide-vue-next';
 
 const props = defineProps({
     modelValue: String,
@@ -18,7 +20,6 @@ const editor = useEditor({
         props.modelValue ||
         '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto 🎉</p>',
     extensions: [
-        // StarterKit,
         StarterKit.configure({
             heading: {
                 levels: [1, 2, 3],
@@ -148,6 +149,18 @@ onBeforeUnmount(() => {
                 editor.isActive('heading', { level: 3 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
             ]">
                 H3
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleBulletList().run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
+                editor.isActive('bulletList') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                <List :size="18" />
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleOrderedList().run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
+                editor.isActive('orderedList') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                <ListOrdered :size="18" />
             </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />
