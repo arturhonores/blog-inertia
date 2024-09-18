@@ -1,5 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
+//para estilos del post creado con tiptap
+import '../css/tiptap-post-style.css'
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';

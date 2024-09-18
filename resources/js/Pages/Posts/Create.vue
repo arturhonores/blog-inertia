@@ -63,7 +63,7 @@ watch(() => form.summary, (newSummary) => {
 
 // Watch para el contenido del editor
 watch(() => form.post_html, (newContent) => {
-    // Aquí puedes realizar acciones adicionales cuando el contenido del editor cambie, si es necesario.
+    //para acciones adicionales cuando el contenido del editor cambie, si es necesario.
 });
 
 // Función para validar campos y enviar el formulario

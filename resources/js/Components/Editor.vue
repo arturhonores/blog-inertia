@@ -18,7 +18,12 @@ const editor = useEditor({
         props.modelValue ||
         '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto 🎉</p>',
     extensions: [
-        StarterKit,
+        // StarterKit,
+        StarterKit.configure({
+            heading: {
+                levels: [1, 2, 3],
+            },
+        }),
         Underline,
         Link.configure({
             openOnClick: true,
@@ -28,7 +33,8 @@ const editor = useEditor({
                 target: '_blank',
                 rel: 'noopener noreferrer',
             },
-        }),],
+        }),
+    ],
     editorProps: {
         attributes: {
             class:
@@ -96,7 +102,7 @@ onBeforeUnmount(() => {
 <template>
     <div class="w-full mt-2">
         <section v-if="editor && editor.isEditable"
-            class="buttons flex items-center flex-wrap gap-x-3 border-t border-l border-r border-gray-300 p-4">
+            class="flex items-center flex-wrap gap-x-3 border-t border-l border-r border-gray-300 p-4">
             <button type="button" @click="editor.chain().focus().toggleBold().run()"
                 :disabled="!editor.can().chain().focus().toggleBold().run()" :class="[
                     'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
@@ -124,6 +130,24 @@ onBeforeUnmount(() => {
                     editor.isActive('link') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
                 ]">
                 <LinkIcon :size="18" />
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
+                editor.isActive('heading', { level: 1 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                H1
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
+                editor.isActive('heading', { level: 2 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                H2
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
+                editor.isActive('heading', { level: 3 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                H3
             </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />
