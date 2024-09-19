@@ -1,6 +1,6 @@
 <!-- ColorPicker.vue -->
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
 
@@ -31,7 +31,3 @@ const currentColor = computed(() => {
             @input="(event) => props.onChange(event.target.value)" :value="currentColor" :title="title">
     </div>
 </template>
-
-<style scoped>
-/* Puedes agregar estilos adicionales si lo deseas */
-</style>

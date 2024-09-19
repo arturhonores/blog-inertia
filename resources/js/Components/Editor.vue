@@ -101,10 +101,46 @@ const editor = useEditor({
     },
 });
 
-// Propiedad computada para el color
+// Propiedad computada para el color sin conversiones
+// const currentColor = computed(() => {
+//     return editor.value?.getAttributes('textStyle').color || '#555555';
+// });
+
+// Función para convertir de rgb a hexadecimal
+const rgbToHex = (rgb) => {
+    const result = rgb.match(/\d+/g).map(x => parseInt(x).toString(16).padStart(2, '0'));
+    return `#${result.join('')}`;
+};
+
+// Función para convertir de HSL a hexadecimal
+const hslToHex = (h, s, l) => {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+};
+
+// Propiedad computada para asegurar que el color esté en formato hexadecimal
 const currentColor = computed(() => {
-    return editor.value?.getAttributes('textStyle').color || '#555555';
+    const color = editor.value?.getAttributes('textStyle').color || '#555555';
+
+    // Verificar si es RGB
+    if (color.startsWith('rgb')) {
+        return rgbToHex(color);
+    }
+    // Verificar si es HSL
+    else if (color.startsWith('hsl')) {
+        const [h, s, l] = color.match(/\d+/g);
+        return hslToHex(h, s, l);
+    }
+    // Asumimos que ya es hexadecimal
+    return color;
 });
+
 
 // Configurar el watch solo después de que el editor esté listo
 watch(
