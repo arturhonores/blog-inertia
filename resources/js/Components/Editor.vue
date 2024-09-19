@@ -1,11 +1,14 @@
 <script setup>
-import { watch, onBeforeUnmount } from 'vue';
+import { watch, onBeforeUnmount, computed } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import { Link as LinkIcon } from 'lucide-vue-next';
 import { List, ListOrdered, TextQuote, Minus } from 'lucide-vue-next';
+import TextStyle from '@tiptap/extension-text-style';
+import { Color } from '@tiptap/extension-color';
+import ColorPicker from './ColorPicker.vue';
 
 const props = defineProps({
     modelValue: String,
@@ -34,6 +37,10 @@ const editor = useEditor({
                 rel: 'noopener noreferrer',
             },
         }),
+        TextStyle,
+        Color.configure({
+            types: ['textStyle'],
+        })
     ],
     editorProps: {
         attributes: {
@@ -48,6 +55,11 @@ const editor = useEditor({
             htmlContent === '<p></p>' || htmlContent.trim() === '' ? '' : htmlContent
         );
     },
+});
+
+// Propiedad computada para el color
+const currentColor = computed(() => {
+    return editor.value?.getAttributes('textStyle').color || '#555555';
 });
 
 // Configurar el watch solo después de que el editor esté listo
@@ -171,6 +183,8 @@ onBeforeUnmount(() => {
                 'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']">
                 <Minus :size="18" />
             </button>
+            <ColorPicker :value="currentColor" :onChange="color => editor.chain().focus().setColor(color).run()"
+                id="text-color-input" title="El color por defecto es #555555" />
         </section>
         <EditorContent v-if="editor" :editor="editor" />
     </div>
