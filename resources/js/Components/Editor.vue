@@ -4,10 +4,12 @@ import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
-import { Link as LinkIcon } from 'lucide-vue-next';
-import { List, ListOrdered, TextQuote, Minus } from 'lucide-vue-next';
 import TextStyle from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
+import Image from '@tiptap/extension-image';
+import FileHandler from '@tiptap-pro/extension-file-handler';
+import { Link as LinkIcon } from 'lucide-vue-next';
+import { List, ListOrdered, TextQuote, Minus, ImageUp } from 'lucide-vue-next';
 import ColorPicker from './ColorPicker.vue';
 
 const props = defineProps({
@@ -40,7 +42,49 @@ const editor = useEditor({
         TextStyle,
         Color.configure({
             types: ['textStyle'],
-        })
+        }),
+        Image,
+        //FileHandler configuration
+        FileHandler.configure({
+            allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+            onDrop: (currentEditor, files, pos) => {
+                files.forEach(file => {
+                    const fileReader = new FileReader()
+
+                    fileReader.readAsDataURL(file)
+                    fileReader.onload = () => {
+                        currentEditor.chain().insertContentAt(pos, {
+                            type: 'image',
+                            attrs: {
+                                src: fileReader.result,
+                            },
+                        }).focus().run()
+                    }
+                })
+            },
+            onPaste: (currentEditor, files, htmlContent) => {
+                files.forEach(file => {
+                    if (htmlContent) {
+                        // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
+                        // you could extract the pasted file from this url string and upload it to a server for example
+                        console.log(htmlContent) // eslint-disable-line no-console
+                        return false
+                    }
+
+                    const fileReader = new FileReader()
+
+                    fileReader.readAsDataURL(file)
+                    fileReader.onload = () => {
+                        currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
+                            type: 'image',
+                            attrs: {
+                                src: fileReader.result,
+                            },
+                        }).focus().run()
+                    }
+                })
+            },
+        }),
     ],
     editorProps: {
         attributes: {
@@ -109,6 +153,15 @@ onBeforeUnmount(() => {
         editor.value.destroy();
     }
 });
+
+// Función para agregar una imagen
+const addImage = () => {
+    const url = window.prompt('URL');
+
+    if (url) {
+        editor.value.chain().focus().setImage({ src: url }).run();
+    }
+};
 </script>
 
 <template>
@@ -185,6 +238,10 @@ onBeforeUnmount(() => {
             </button>
             <ColorPicker :value="currentColor" :onChange="color => editor.chain().focus().setColor(color).run()"
                 id="text-color-input" title="El color por defecto es #555555" />
+            <button type="button" @click="addImage" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']">
+                <ImageUp :size="18" />
+            </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />
     </div>
