@@ -5,8 +5,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import { Link as LinkIcon } from 'lucide-vue-next';
-import { List } from 'lucide-vue-next';
-import { ListOrdered } from 'lucide-vue-next';
+import { List, ListOrdered, TextQuote, Minus } from 'lucide-vue-next';
 
 const props = defineProps({
     modelValue: String,
@@ -101,9 +100,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="w-full mt-2">
+    <div class="w-full mt-2 bg-gray-400">
         <section v-if="editor && editor.isEditable"
-            class="flex items-center flex-wrap gap-x-3 border-t border-l border-r border-gray-300 p-4">
+            class="flex items-center justify-center flex-wrap gap-3 border-t border-l border-r border-gray-300 p-4">
             <button type="button" @click="editor.chain().focus().toggleBold().run()"
                 :disabled="!editor.can().chain().focus().toggleBold().run()" :class="[
                     'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
@@ -161,6 +160,16 @@ onBeforeUnmount(() => {
                 editor.isActive('orderedList') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
             ]">
                 <ListOrdered :size="18" />
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleBlockquote().run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
+                editor.isActive('blockquote') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]">
+                <TextQuote :size="18" />
+            </button>
+            <button type="button" @click="editor.chain().focus().setHorizontalRule().run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']">
+                <Minus :size="18" />
             </button>
         </section>
         <EditorContent v-if="editor" :editor="editor" />

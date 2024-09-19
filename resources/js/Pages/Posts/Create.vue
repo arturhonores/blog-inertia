@@ -214,7 +214,8 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
 
                     <!-- Botón de envío -->
                     <div class="mt-4">
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Guardar Post</button>
+                        <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Guardar
+                            Post</button>
                     </div>
                 </form>
             </div>

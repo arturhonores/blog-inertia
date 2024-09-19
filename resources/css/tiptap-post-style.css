@@ -16,7 +16,7 @@
     --heading-h3-font-weight: 500;
 
     --color-paragraph: #555;
-    --margin-paragraph: 0.3rem;
+    --margin-paragraph: 0.5rem;
 
     --margin-list-li: 0.15rem;
 }
@@ -52,6 +52,7 @@
     margin-bottom: var(--margin-paragraph);
 }
 
+/* estilos listas */
 .tiptap ul {
     list-style-type: disc;
     list-style-position: outside;
@@ -74,4 +75,22 @@
 
 .tiptap li::marker {
     color: var(--heading-h3-color);
+}
+
+/* estilos text quote */
+.tiptap blockquote {
+    border-left: 3px solid var(--heading-h3-color);
+    margin: 0 0 0.2rem 0;
+    padding-left: 1rem;
+}
+
+.tiptap hr {
+    border: none;
+    border-top: 1px solid var(--color-paragraph);
+    cursor: pointer;
+    margin: 1rem 0;
+
+    &.ProseMirror-selectednode {
+        border-top: 1px solid rgb(99 102 241);
+    }
 }

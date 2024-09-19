@@ -213,7 +213,7 @@ watch(() => form.summary, (newSummary) => {
 
                     <!-- Botón de envío -->
                     <div class="mt-4">
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Actualizar
+                        <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Actualizar
                             Post</button>
                     </div>
                 </form>
