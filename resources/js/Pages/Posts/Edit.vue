@@ -25,8 +25,8 @@ const form = useForm({
     slug: props.post.slug || '',
     meta_title: props.post.meta_title || '',
     meta_description: props.post.meta_description || '',
-    image_post_url: props.post.image_post_url || '',
-    image_card_url: props.post.image_card_url || '',
+    image_post_url: null,
+    image_card_url: null,
     post_html: props.post.post_html || '',
     summary: props.post.summary || '',
     publish_date: props.post.publish_date || '',
@@ -39,22 +39,6 @@ const titleLength = ref(form.title.length);
 const metaTitleLength = ref(form.meta_title.length);
 const metaDescriptionLength = ref(form.meta_description.length);
 const summaryLength = ref(form.summary.length);
-
-// Función para enviar la actualización del formulario
-function submit() {
-    form.put(route('posts.update', props.post.id), {
-        onSuccess: () => {
-            console.log('Post actualizado con éxito.');
-        },
-        onError: (errors) => {
-            console.error('Errores de validación:', errors);
-        }
-    });
-}
-
-// Computed properties para los select de autores y categorías
-const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
-const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
 
 // Watchers para actualizar contadores de caracteres y generar slug
 watch(() => form.title, (newTitle) => {
@@ -76,6 +60,22 @@ watch(() => form.meta_description, (newMetaDescription) => {
 watch(() => form.summary, (newSummary) => {
     summaryLength.value = newSummary.length;
 });
+
+// Función para enviar la actualización del formulario
+function submit() {
+    form.put(route('posts.update', props.post.id), {
+        onSuccess: () => {
+            console.log('Post actualizado con éxito.');
+        },
+        onError: (errors) => {
+            console.error('Errores de validación:', errors);
+        }
+    });
+}
+
+// Computed properties para los select de autores y categorías
+const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
+const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
 </script>
 
 <template>
@@ -86,7 +86,7 @@ watch(() => form.summary, (newSummary) => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <form @submit.prevent="submit">
+                <form @submit.prevent="submit" enctype="multipart/form-data">
                     <!-- Título -->
                     <div class="mb-4">
                         <div class="flex justify-between">
@@ -143,18 +143,39 @@ watch(() => form.summary, (newSummary) => {
                     </div>
 
                     <!-- URL de la Imagen del Post -->
-                    <div class="mb-4">
+                    <!-- <div class="mb-4">
                         <InputLabel for="image_post_url" value="URL de la Imagen del Post" />
                         <TextInput id="image_post_url" v-model="form.image_post_url" class="block w-full mt-1"
                             type="url" />
                         <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
+                    </div> -->
+                    <!-- Previsualización de la imagen del post -->
+                    <div v-if="props.post.image_post_url" class="mb-4">
+                        <img :src="props.post.image_post_url" alt="Imagen actual del post" class="w-64 h-auto" />
+                    </div>
+                    <!-- Input para subir nueva imagen del post -->
+                    <div class="mb-4">
+                        <InputLabel for="image_post_url" value="Subir nueva imagen del post" />
+                        <input type="file" @change="(e) => form.image_post_url = e.target.files[0]" />
+                        <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
                     </div>
 
                     <!-- URL de la Imagen de la Tarjeta -->
-                    <div class="mb-4">
+                    <!-- <div class="mb-4">
                         <InputLabel for="image_card_url" value="URL de la Imagen de la Tarjeta" />
                         <TextInput id="image_card_url" v-model="form.image_card_url" class="block w-full mt-1"
                             type="url" />
+                        <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
+                    </div> -->
+
+                    <!-- Previsualización de la imagen de la tarjeta -->
+                    <div v-if="props.post.image_card_url" class="mb-4">
+                        <img :src="props.post.image_card_url" alt="Imagen actual de la tarjeta" class="w-64 h-auto" />
+                    </div>
+                    <!-- Input para subir nueva imagen de la tarjeta -->
+                    <div class="mb-4">
+                        <InputLabel for="image_card_url" value="Subir nueva imagen de la tarjeta" />
+                        <input type="file" @change="(e) => form.image_card_url = e.target.files[0]" />
                         <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
                     </div>
 

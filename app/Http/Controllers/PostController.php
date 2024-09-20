@@ -9,6 +9,8 @@ use App\Models\Category;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+//para depuración
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -45,8 +47,8 @@ class PostController extends Controller
             'meta_description' => 'required|max:200',
             // 'image_post_url' => 'required|url',
             // 'image_card_url' => 'required|url',
-            'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif',  // Cambiar a validación de archivo
-            'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif',  // Cambiar a validación de archivo
+            'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
+            'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
             'post_html' => 'required',
             'summary' => 'required|max:180',
             'publish_date' => 'required|date',
@@ -61,16 +63,12 @@ class PostController extends Controller
             'meta_title.max' => 'El meta título no puede tener más de 100 caracteres.',
             'meta_description.required' => 'La meta descripción es obligatoria.',
             'meta_description.max' => 'La meta descripción no puede tener más de 200 caracteres.',
-            // 'image_post_url.required' => 'La URL de la imagen del post es obligatoria.',
-            // 'image_post_url.url' => 'La URL de la imagen del post debe ser una URL válida.',
-            // 'image_card_url.required' => 'La URL de la imagen de la tarjeta es obligatoria.',
-            // 'image_card_url.url' => 'La URL de la imagen de la tarjeta debe ser una URL válida.',
             'image_post_url.required' => 'La imagen del post es obligatoria.',  // Cambiar mensaje de error
             'image_post_url.file' => 'Debes subir un archivo válido para la imagen del post.', // Validar que sea un archivo
-            'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG o GIF.', // Validar formato del archivo
+            'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG, WEBP o GIF.', // Validar formato del archivo
             'image_card_url.required' => 'La imagen de la tarjeta es obligatoria.',
             'image_card_url.file' => 'Debes subir un archivo válido para la imagen de la tarjeta.',
-            'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG o GIF.',
+            'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
             'post_html.required' => 'El contenido del post es obligatorio.',
             'summary.required' => 'El resumen es obligatorio.',
             'summary.max' => 'El resumen no puede tener más de 180 caracteres.',
@@ -88,8 +86,10 @@ class PostController extends Controller
         // Subir imagen del post a S3
         if ($request->hasFile('image_post_url')) {
             $file = $request->file('image_post_url');
-            $route = Storage::disk('s3')->put('posts', $file); // Almacenar la imagen en la carpeta 'posts'
-            $url = Storage::disk('s3')->url($route); // Generar URL pública
+            // Almacenar la imagen en la carpeta 'posts'
+            $route = Storage::disk('s3')->put('posts', $file);
+            // Generar URL pública
+            $url = Storage::disk('s3')->url($route);
             $validatedData['image_post_url'] = $url; // Guardar la URL en la base de datos
         }
 
@@ -130,14 +130,19 @@ class PostController extends Controller
     // Actualizar un post existente en la base de datos
     public function update(Request $request, Post $post)
     {
+
+        Log::info('Datos recibidos para actualizar el post:', $request->all());
+
         // Validación de los datos
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'slug' => 'required|unique:posts,slug,' . $post->id,
             'meta_title' => 'required|max:100',
             'meta_description' => 'required|max:200',
-            'image_post_url' => 'required|url',
-            'image_card_url' => 'required|url',
+            // 'image_post_url' => 'required|url',
+            // 'image_card_url' => 'required|url',
+            'image_post_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
+            'image_card_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
             'post_html' => 'required',
             'summary' => 'required|max:180',
             'publish_date' => 'required|date',
@@ -152,10 +157,16 @@ class PostController extends Controller
             'meta_title.max' => 'El meta título no puede tener más de 100 caracteres.',
             'meta_description.required' => 'La meta descripción es obligatoria.',
             'meta_description.max' => 'La meta descripción no puede tener más de 200 caracteres.',
-            'image_post_url.required' => 'La URL de la imagen del post es obligatoria.',
-            'image_post_url.url' => 'La URL de la imagen del post debe ser una URL válida.',
-            'image_card_url.required' => 'La URL de la imagen de la tarjeta es obligatoria.',
-            'image_card_url.url' => 'La URL de la imagen de la tarjeta debe ser una URL válida.',
+            // 'image_post_url.required' => 'La URL de la imagen del post es obligatoria.',
+            // 'image_post_url.url' => 'La URL de la imagen del post debe ser una URL válida.',
+            // 'image_card_url.required' => 'La URL de la imagen de la tarjeta es obligatoria.',
+            // 'image_card_url.url' => 'La URL de la imagen de la tarjeta debe ser una URL válida.',
+            'image_post_url.required' => 'La imagen del post es obligatoria.',  // Cambiar mensaje de error
+            'image_post_url.file' => 'Debes subir un archivo válido para la imagen del post.', // Validar que sea un archivo
+            'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG, WEBP o GIF.', // Validar formato del archivo
+            'image_card_url.required' => 'La imagen de la tarjeta es obligatoria.',
+            'image_card_url.file' => 'Debes subir un archivo válido para la imagen de la tarjeta.',
+            'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
             'post_html.required' => 'El contenido del post es obligatorio.',
             'summary.required' => 'El resumen es obligatorio.',
             'summary.max' => 'El resumen no puede tener más de 180 caracteres.',
@@ -166,6 +177,32 @@ class PostController extends Controller
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.exists' => 'La categoría seleccionada no es válida.',
         ]);
+
+        // Manejar la imagen del post
+        if ($request->hasFile('image_post_url')) {
+            $file = $request->file('image_post_url');
+            // Almacenar la imagen en la carpeta 'posts' de S3
+            $route = Storage::disk('s3')->put('posts', $file);
+            // Obtener la URL pública de la imagen
+            $url = Storage::disk('s3')->url($route);
+            $validatedData['image_post_url'] = $url;
+        } else {
+            // Mantener la imagen existente si no se sube una nueva
+            unset($validatedData['image_post_url']);
+        }
+
+        // Manejar la imagen de la tarjeta
+        if ($request->hasFile('image_card_url')) {
+            $file = $request->file('image_card_url');
+            // Almacenar la imagen en la carpeta 'cards' de S3
+            $route = Storage::disk('s3')->put('cards', $file);
+            // Obtener la URL pública de la imagen
+            $url = Storage::disk('s3')->url($route);
+            $validatedData['image_card_url'] = $url;
+        } else {
+            // Mantener la imagen existente si no se sube una nueva
+            unset($validatedData['image_card_url']);
+        }
 
         // Actualizar el post con los datos validados
         $post->update($validatedData);
