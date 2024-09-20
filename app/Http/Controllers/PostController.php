@@ -39,6 +39,9 @@ class PostController extends Controller
     // Guardar un nuevo post en la base de datos
     public function store(Request $request)
     {
+        //depuración
+        Log::info('Datos recibidos para crear el post:', $request->all());
+
         // Validación de los datos
         $validatedData = $request->validate([
             'title' => 'required|max:255',
@@ -139,8 +142,6 @@ class PostController extends Controller
             'slug' => 'required|unique:posts,slug,' . $post->id,
             'meta_title' => 'required|max:100',
             'meta_description' => 'required|max:200',
-            // 'image_post_url' => 'required|url',
-            // 'image_card_url' => 'required|url',
             'image_post_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
             'image_card_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
             'post_html' => 'required',
@@ -157,10 +158,6 @@ class PostController extends Controller
             'meta_title.max' => 'El meta título no puede tener más de 100 caracteres.',
             'meta_description.required' => 'La meta descripción es obligatoria.',
             'meta_description.max' => 'La meta descripción no puede tener más de 200 caracteres.',
-            // 'image_post_url.required' => 'La URL de la imagen del post es obligatoria.',
-            // 'image_post_url.url' => 'La URL de la imagen del post debe ser una URL válida.',
-            // 'image_card_url.required' => 'La URL de la imagen de la tarjeta es obligatoria.',
-            // 'image_card_url.url' => 'La URL de la imagen de la tarjeta debe ser una URL válida.',
             'image_post_url.required' => 'La imagen del post es obligatoria.',  // Cambiar mensaje de error
             'image_post_url.file' => 'Debes subir un archivo válido para la imagen del post.', // Validar que sea un archivo
             'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG, WEBP o GIF.', // Validar formato del archivo
@@ -177,6 +174,9 @@ class PostController extends Controller
             'category_id.required' => 'La categoría es obligatoria.',
             'category_id.exists' => 'La categoría seleccionada no es válida.',
         ]);
+
+        // Asignar el user_id del usuario autenticado
+        $validatedData['user_id'] = Auth::id();
 
         // Manejar la imagen del post
         if ($request->hasFile('image_post_url')) {

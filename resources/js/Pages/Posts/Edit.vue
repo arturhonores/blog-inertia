@@ -32,6 +32,8 @@ const form = useForm({
     publish_date: props.post.publish_date || '',
     author_id: props.post.author_id || '',
     category_id: props.post.category_id || '',
+    //según documentacion de inertia
+    _method: 'PUT'
 });
 
 // Estado para los contadores de caracteres
@@ -63,7 +65,7 @@ watch(() => form.summary, (newSummary) => {
 
 // Función para enviar la actualización del formulario
 function submit() {
-    form.put(route('posts.update', props.post.id), {
+    form.post(route('posts.update', props.post.id), {
         onSuccess: () => {
             console.log('Post actualizado con éxito.');
         },
@@ -77,6 +79,7 @@ function submit() {
 const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
 const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
 </script>
+
 
 <template>
     <AppLayout title="Editar Post">
@@ -142,13 +145,6 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                         </p>
                     </div>
 
-                    <!-- URL de la Imagen del Post -->
-                    <!-- <div class="mb-4">
-                        <InputLabel for="image_post_url" value="URL de la Imagen del Post" />
-                        <TextInput id="image_post_url" v-model="form.image_post_url" class="block w-full mt-1"
-                            type="url" />
-                        <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
-                    </div> -->
                     <!-- Previsualización de la imagen del post -->
                     <div v-if="props.post.image_post_url" class="mb-4">
                         <img :src="props.post.image_post_url" alt="Imagen actual del post" class="w-64 h-auto" />
@@ -156,17 +152,11 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     <!-- Input para subir nueva imagen del post -->
                     <div class="mb-4">
                         <InputLabel for="image_post_url" value="Subir nueva imagen del post" />
-                        <input type="file" @change="(e) => form.image_post_url = e.target.files[0]" />
+                        <input type="file" @input="form.image_post_url = $event.target.files[0]" id="image_post_url"
+                            name="image_post_url" class="block w-full mt-1" />
                         <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
                     </div>
 
-                    <!-- URL de la Imagen de la Tarjeta -->
-                    <!-- <div class="mb-4">
-                        <InputLabel for="image_card_url" value="URL de la Imagen de la Tarjeta" />
-                        <TextInput id="image_card_url" v-model="form.image_card_url" class="block w-full mt-1"
-                            type="url" />
-                        <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
-                    </div> -->
 
                     <!-- Previsualización de la imagen de la tarjeta -->
                     <div v-if="props.post.image_card_url" class="mb-4">
@@ -175,7 +165,10 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     <!-- Input para subir nueva imagen de la tarjeta -->
                     <div class="mb-4">
                         <InputLabel for="image_card_url" value="Subir nueva imagen de la tarjeta" />
-                        <input type="file" @change="(e) => form.image_card_url = e.target.files[0]" />
+                        <!-- <input type="file" @change="(e) => form.image_card_url = e.target.files[0]" id="image_card_url"
+                            name="image_card_url" /> -->
+                        <input type="file" @input="form.image_card_url = $event.target.files[0]" id="image_card_url"
+                            name="image_card_url" class="block w-full mt-1" />
                         <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
                     </div>
 
