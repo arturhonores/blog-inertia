@@ -7,7 +7,6 @@ import Link from '@tiptap/extension-link';
 import TextStyle from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import Image from '@tiptap/extension-image';
-import FileHandler from '@tiptap-pro/extension-file-handler';
 import { Link as LinkIcon } from 'lucide-vue-next';
 import { List, ListOrdered, TextQuote, Minus, ImageUp } from 'lucide-vue-next';
 import ColorPicker from './ColorPicker.vue';
@@ -44,47 +43,6 @@ const editor = useEditor({
             types: ['textStyle'],
         }),
         Image,
-        //FileHandler configuration
-        FileHandler.configure({
-            allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-            onDrop: (currentEditor, files, pos) => {
-                files.forEach(file => {
-                    const fileReader = new FileReader()
-
-                    fileReader.readAsDataURL(file)
-                    fileReader.onload = () => {
-                        currentEditor.chain().insertContentAt(pos, {
-                            type: 'image',
-                            attrs: {
-                                src: fileReader.result,
-                            },
-                        }).focus().run()
-                    }
-                })
-            },
-            onPaste: (currentEditor, files, htmlContent) => {
-                files.forEach(file => {
-                    if (htmlContent) {
-                        // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
-                        // you could extract the pasted file from this url string and upload it to a server for example
-                        console.log(htmlContent) // eslint-disable-line no-console
-                        return false
-                    }
-
-                    const fileReader = new FileReader()
-
-                    fileReader.readAsDataURL(file)
-                    fileReader.onload = () => {
-                        currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
-                            type: 'image',
-                            attrs: {
-                                src: fileReader.result,
-                            },
-                        }).focus().run()
-                    }
-                })
-            },
-        }),
     ],
     editorProps: {
         attributes: {
@@ -100,11 +58,6 @@ const editor = useEditor({
         );
     },
 });
-
-// Propiedad computada para el color sin conversiones
-// const currentColor = computed(() => {
-//     return editor.value?.getAttributes('textStyle').color || '#555555';
-// });
 
 // Función para convertir de rgb a hexadecimal
 const rgbToHex = (rgb) => {

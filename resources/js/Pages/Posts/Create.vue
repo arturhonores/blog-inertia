@@ -143,13 +143,6 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                         </p>
                     </div>
 
-                    <!-- Imagen URL -->
-                    <!-- <div class="mb-4">
-                        <InputLabel for="image_post_url" value="URL de la Imagen del Post" />
-                        <TextInput id="image_post_url" v-model="form.image_post_url" class="block w-full mt-1"
-                            type="url" />
-                        <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
-                    </div> -->
                     <!-- Imagen del Post (Input File) -->
                     <div class="mb-4">
                         <InputLabel for="image_post_url" value="Imagen del Post" />
@@ -157,14 +150,6 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                             @change="form.image_post_url = $event.target.files[0]" class="block w-full mt-1" />
                         <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
                     </div>
-
-                    <!-- Imagen de la Tarjeta -->
-                    <!-- <div class="mb-4">
-                        <InputLabel for="image_card_url" value="URL de la Imagen de la Tarjeta" />
-                        <TextInput id="image_card_url" v-model="form.image_card_url" class="block w-full mt-1"
-                            type="url" />
-                        <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
-                    </div> -->
 
                     <!-- Imagen de la Tarjeta (Input File) -->
                     <div class="mb-4">

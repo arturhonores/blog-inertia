@@ -19,7 +19,6 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
-        "@tiptap-pro/extension-file-handler": "^2.7.0",
         "@tiptap/extension-color": "^2.7.0",
         "@tiptap/extension-image": "^2.7.0",
         "@tiptap/extension-link": "^2.7.0",
