@@ -48,12 +48,10 @@ class PostController extends Controller
             'slug' => 'required|unique:posts,slug',
             'meta_title' => 'required|max:100',
             'meta_description' => 'required|max:200',
-            // 'image_post_url' => 'required|url',
-            // 'image_card_url' => 'required|url',
             'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
             'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
             'post_html' => 'required',
-            'summary' => 'required|max:180',
+            'summary' => 'required|max:700',
             'publish_date' => 'required|date',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
@@ -74,7 +72,7 @@ class PostController extends Controller
             'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
             'post_html.required' => 'El contenido del post es obligatorio.',
             'summary.required' => 'El resumen es obligatorio.',
-            'summary.max' => 'El resumen no puede tener más de 180 caracteres.',
+            'summary.max' => 'El resumen no puede tener más de 700 caracteres.',
             'publish_date.required' => 'La fecha de publicación es obligatoria.',
             'publish_date.date' => 'La fecha de publicación debe tener un formato válido.',
             'author_id.required' => 'El autor es obligatorio.',
@@ -145,7 +143,7 @@ class PostController extends Controller
             'image_post_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
             'image_card_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
             'post_html' => 'required',
-            'summary' => 'required|max:180',
+            'summary' => 'required|max:700',
             'publish_date' => 'required|date',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
@@ -166,7 +164,7 @@ class PostController extends Controller
             'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
             'post_html.required' => 'El contenido del post es obligatorio.',
             'summary.required' => 'El resumen es obligatorio.',
-            'summary.max' => 'El resumen no puede tener más de 180 caracteres.',
+            'summary.max' => 'El resumen no puede tener más de 700 caracteres.',
             'publish_date.required' => 'La fecha de publicación es obligatoria.',
             'publish_date.date' => 'La fecha de publicación debe tener un formato válido.',
             'author_id.required' => 'El autor es obligatorio.',

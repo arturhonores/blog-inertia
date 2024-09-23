@@ -3,6 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
+import TextArea from '@/Components/TextArea.vue';
 import Editor from '@/Components/Editor.vue';
 import { ref, computed, watch } from 'vue';
 import slugify from 'slugify';
@@ -17,7 +18,7 @@ const props = defineProps({
 const TITLE_MAX_LENGTH = 255;
 const META_TITLE_MAX_LENGTH = 100;
 const META_DESCRIPTION_MAX_LENGTH = 200;
-const SUMMARY_MAX_LENGTH = 180;
+const SUMMARY_MAX_LENGTH = 700;
 
 // Inicializamos el formulario con los datos existentes del post
 const form = useForm({
@@ -139,8 +140,8 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                                 <p>Max. caracteres: {{ META_DESCRIPTION_MAX_LENGTH }}</p>
                             </div>
                         </div>
-                        <TextInput id="meta_description" v-model="form.meta_description" class="block w-full mt-1"
-                            :maxlength="META_DESCRIPTION_MAX_LENGTH" />
+                        <TextArea id="meta_description" v-model="form.meta_description" :rows="2"
+                            class="block w-full mt-1" :maxlength="META_DESCRIPTION_MAX_LENGTH" />
                         <p v-if="form.errors.meta_description" class="text-red-500">{{ form.errors.meta_description }}
                         </p>
                     </div>
@@ -172,13 +173,6 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                         <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
                     </div>
 
-                    <!-- Contenido del Post (HTML) usando el componente Editor -->
-                    <div class="mb-4">
-                        <InputLabel for="post_html" value="Contenido del Post" />
-                        <Editor v-model="form.post_html" />
-                        <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
-                    </div>
-
                     <!-- Resumen -->
                     <div class="mb-4">
                         <div class="flex justify-between">
@@ -188,9 +182,16 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                                 <p>Max. caracteres: {{ SUMMARY_MAX_LENGTH }}</p>
                             </div>
                         </div>
-                        <textarea id="summary" v-model="form.summary" class="block w-full mt-1"
-                            :maxlength="SUMMARY_MAX_LENGTH"></textarea>
+                        <TextArea id="summary" v-model="form.summary" class="block w-full mt-1"
+                            :maxlength="SUMMARY_MAX_LENGTH"></TextArea>
                         <p v-if="form.errors.summary" class="text-red-500">{{ form.errors.summary }}</p>
+                    </div>
+
+                    <!-- Contenido del Post (HTML) usando el componente Editor -->
+                    <div class="mb-4">
+                        <InputLabel for="post_html" value="Contenido del Post" />
+                        <Editor v-model="form.post_html" />
+                        <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
                     </div>
 
                     <!-- Fecha de Publicación -->
