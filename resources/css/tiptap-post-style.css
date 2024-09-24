@@ -2,26 +2,32 @@
     --heading-h1-color: #1a202c;
     --heading-h2-color: #2d3748;
     --heading-h3-color: #444;
+    --heading-h4-color: #444;
+    --date-color: #999;
 
-    --heading-h1-font-size: 32px;
-    --heading-h2-font-size: 24px;
-    --heading-h3-font-size: 20px;
+    --heading-h1-font-size: 2rem;
+    --heading-h2-font-size: 1.5rem;
+    --heading-h3-font-size: 1.25rem;
+    --heading-h4-font-size: 1.10rem;
 
-    --heading-h1-margin: 1rem;
-    --heading-h2-margin: 0.75rem;
-    --heading-h3-margin: 0.5rem;
+    --heading-h1-margin: 1.3rem;
+    --heading-h2-margin: 1.2rem;
+    --heading-h3-margin: 1.1rem;
+    --heading-h4-margin: 1rem;
 
     --heading-h1-font-weight: 700;
     --heading-h2-font-weight: 600;
     --heading-h3-font-weight: 500;
+    --heading-h4-font-weight: 500;
 
     --color-paragraph: #555;
-    --margin-paragraph: 0.5rem;
+    --margin-paragraph: 1rem;
 
     --margin-list-li: 0.15rem;
 }
 
-.tiptap h1 {
+.tiptap h1,
+.tiptap-h1 {
     font-size: var(--heading-h1-font-size);
     font-weight: var(--heading-h1-font-weight);
     margin-bottom: var(--heading-h1-margin);
@@ -47,7 +53,17 @@
     line-height: 1.35;
 }
 
-.tiptap p {
+.tiptap h4 {
+    font-size: var(--heading-h4-font-size);
+    font-weight: var(--heading-h4-font-weight);
+    margin-top: var(--heading-h4-margin);
+    margin-bottom: var(--heading-h4-margin);
+    color: var(--heading-h4-color);
+    line-height: 1.35;
+}
+
+.tiptap p,
+.tiptap-p {
     color: var(--color-paragraph);
     margin-bottom: var(--margin-paragraph);
 }
@@ -57,12 +73,16 @@
     list-style-type: disc;
     list-style-position: outside;
     padding-left: 1rem;
+    margin-top: var(--margin-paragraph);
+    margin-bottom: var(--margin-paragraph);
 }
 
 .tiptap ol {
     list-style-type: decimal;
     list-style-position: outside;
     padding-left: 1rem;
+    margin-top: var(--margin-paragraph);
+    margin-bottom: var(--margin-paragraph);
 }
 
 .tiptap ul li p {
@@ -93,4 +113,22 @@
     &.ProseMirror-selectednode {
         border-top: 1px solid rgb(99 102 241);
     }
+}
+
+.tiptap-date {
+    color: var(--date-color);
+    margin: 1rem 0;
+}
+
+.truncate-resumen-card {
+    display: -webkit-box;
+    /* Caja flexible */
+    -webkit-box-orient: vertical;
+    /* Orientación vertical */
+    -webkit-line-clamp: 5;
+    /* Número de líneas que se muestran */
+    overflow: hidden;
+    /* Oculta el contenido que sobrepasa el límite */
+    text-overflow: ellipsis;
+    /* Agrega puntos suspensivos al final */
 }

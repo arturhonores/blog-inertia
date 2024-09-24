@@ -50,14 +50,19 @@ function deletePost() {
 
         <div class="container mx-auto py-7 max-w-5xl px-6">
             <div>
-                <h1 class="text-3xl mb-3">{{ post.title }}</h1>
-                <p class="mb-3">{{ post.summary }}</p>
+                <h1 class="tiptap-h1">{{ post.title }}</h1>
+                <p class="tiptap-p">{{ post.summary }}</p>
+                <p class="tiptap-date">{{ new Date(post.publish_date).toLocaleDateString("es-Es", {
+                    day: "numeric", month: "long",
+                    year: "numeric"
+                })
+                    }}</p>
                 <img class="w-full h-auto" :src="post.image_post_url" alt="">
                 <div v-html="post.post_html" class="my-3 tiptap"></div>
-                <div class="w-16">
+                <div class="w-16 mt-8">
                     <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundo.png" alt="mundo" width="100%">
                 </div>
-                <p>© 2024 Formación Activa Profesional</p>
+                <p class="tiptap-p">© {{ new Date(post.publish_date).getFullYear() }} Formación Activa Profesional</p>
             </div>
         </div>
 

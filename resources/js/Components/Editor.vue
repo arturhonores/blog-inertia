@@ -6,7 +6,7 @@ import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import TextStyle from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
-import Image from '@tiptap/extension-image';
+// import Image from '@tiptap/extension-image';
 import { Link as LinkIcon } from 'lucide-vue-next';
 import { List, ListOrdered, TextQuote, Minus, ImageUp } from 'lucide-vue-next';
 import ColorPicker from './ColorPicker.vue';
@@ -25,7 +25,7 @@ const editor = useEditor({
     extensions: [
         StarterKit.configure({
             heading: {
-                levels: [1, 2, 3],
+                levels: [2, 3, 4],
             },
         }),
         Underline,
@@ -42,7 +42,6 @@ const editor = useEditor({
         Color.configure({
             types: ['textStyle'],
         }),
-        Image,
     ],
     editorProps: {
         attributes: {
@@ -161,76 +160,76 @@ const addImage = () => {
                 :disabled="!editor.can().chain().focus().toggleBold().run()" :class="[
                     'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
                     editor.isActive('bold') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-                ]">
+                ]" title="Negrita">
                 B
             </button>
             <button type="button" @click="editor.chain().focus().toggleItalic().run()"
                 :disabled="!editor.can().chain().focus().toggleItalic().run()" :class="[
                     'px-2 py-1 font-bold rounded-lg italic w-8', // Clases por defecto
                     editor.isActive('italic') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-                ]">
+                ]" title="Cursiva">
                 I
             </button>
             <button type="button" @click="editor.chain().focus().toggleUnderline().run()"
                 :disabled="!editor.can().chain().focus().toggleUnderline().run()" :class="[
                     'px-2 py-1 font-bold rounded-lg w-8', // Clases por defecto
                     editor.isActive('underline') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-                ]">
+                ]" title="Subrayado">
                 U
             </button>
             <button type="button" @click="addOrRemoveLink" :disabled="!editor.can().chain().focus().toggleLink().run()"
                 :class="[
                     'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
                     editor.isActive('link') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-                ]">
+                ]" title="Agregar/Quitar enlace">
                 <LinkIcon :size="18" />
-            </button>
-            <button type="button" @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="[
-                'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
-                editor.isActive('heading', { level: 1 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
-                H1
             </button>
             <button type="button" @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
                 editor.isActive('heading', { level: 2 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
+            ]" title="Subtítulo H2">
                 H2
             </button>
             <button type="button" @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
                 editor.isActive('heading', { level: 3 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
+            ]" title="Subtítulo H3">
                 H3
+            </button>
+            <button type="button" @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" :class="[
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 text-center text-sm', // Clases por defecto
+                editor.isActive('heading', { level: 4 }) ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
+            ]" title="Subtítulo H4">
+                H4
             </button>
             <button type="button" @click="editor.chain().focus().toggleBulletList().run()" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
                 editor.isActive('bulletList') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
+            ]" title="Agregar/Quitar lista desordenada">
                 <List :size="18" />
             </button>
             <button type="button" @click="editor.chain().focus().toggleOrderedList().run()" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
                 editor.isActive('orderedList') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
+            ]" title="Agregar/Quitar lista ordenada">
                 <ListOrdered :size="18" />
             </button>
             <button type="button" @click="editor.chain().focus().toggleBlockquote().run()" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8', // Clases por defecto
                 editor.isActive('blockquote') ? 'bg-neutral-900 text-white' : 'bg-stone-200', // Clases condicionales
-            ]">
+            ]" title="Agregar/Quitar cita">
                 <TextQuote :size="18" />
             </button>
             <button type="button" @click="editor.chain().focus().setHorizontalRule().run()" :class="[
-                'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']">
+                'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']" title="Agregar/Quitar separador">
                 <Minus :size="18" />
             </button>
             <ColorPicker :value="currentColor" :onChange="color => editor.chain().focus().setColor(color).run()"
                 id="text-color-input" title="El color por defecto es #555555" />
-            <button type="button" @click="addImage" :class="[
+            <!-- <button type="button" @click="addImage" :class="[
                 'px-2 py-1 font-bold rounded-lg w-8 h-8 bg-stone-200']">
                 <ImageUp :size="18" />
-            </button>
+            </button> -->
         </section>
         <EditorContent v-if="editor" :editor="editor" />
     </div>
