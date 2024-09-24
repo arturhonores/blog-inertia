@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
+import Select from '@/Components/Select.vue';
 import Editor from '@/Components/Editor.vue';
 import { ref, computed, watch } from 'vue';
 import slugify from 'slugify';
@@ -89,10 +90,10 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
                 <form @submit.prevent="submit" enctype="multipart/form-data">
                     <!-- Título -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <div class="flex justify-between">
                             <InputLabel for="title" value="Título" />
                             <div class="flex gap-4 text-xs">
@@ -107,7 +108,7 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     </div>
 
                     <!-- Slug (deshabilitado) -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <div class="flex justify-between">
                             <InputLabel for="slug" value="Slug" />
                             <p class="text-xs">Generado automáticamente</p>
@@ -118,7 +119,7 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     </div>
 
                     <!-- Meta Título -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <div class="flex justify-between">
                             <InputLabel for="meta_title" value="Meta Título" />
                             <div class="flex gap-4 text-xs">
@@ -132,7 +133,7 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     </div>
 
                     <!-- Meta Descripción -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <div class="flex justify-between">
                             <InputLabel for="meta_description" value="Meta Descripción" />
                             <div class="flex gap-4 text-xs">
@@ -146,35 +147,48 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                         </p>
                     </div>
 
-                    <!-- Previsualización de la imagen del post -->
-                    <div v-if="props.post.image_post_url" class="mb-4">
-                        <img :src="props.post.image_post_url" alt="Imagen actual del post" class="w-64 h-auto" />
-                    </div>
-                    <!-- Input para subir nueva imagen del post -->
-                    <div class="mb-4">
-                        <InputLabel for="image_post_url" value="Subir nueva imagen del post" />
-                        <input type="file" @input="form.image_post_url = $event.target.files[0]" id="image_post_url"
-                            name="image_post_url" class="block w-full mt-1" />
-                        <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url }}</p>
-                    </div>
+                    <div class="flex gap-3 flex-wrap mb-8">
+                        <div class="grow">
+                            <p>Imagen actual del post</p>
+                            <!-- Previsualización de la imagen del post -->
+                            <div v-if="props.post.image_post_url" class="h-40">
+                                <img :src="props.post.image_post_url" alt="Imagen actual del post"
+                                    class="w-auto h-36" />
+                            </div>
+                            <!-- Input para subir nueva imagen del post -->
+                            <div class="mb-4">
+                                <InputLabel for="image_post_url" value="Subir nueva imagen del post (MAX. 5MB)" />
+                                <input type="file" @input="form.image_post_url = $event.target.files[0]"
+                                    id="image_post_url" name="image_post_url"
+                                    class="block w-full mt-1 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:bg-gray-300 file:border-0 file:me-4 file:py-2 file:px-4" />
+                                <p v-if="form.errors.image_post_url" class="text-red-500">{{ form.errors.image_post_url
+                                    }}
+                                </p>
+                            </div>
+                        </div>
 
-
-                    <!-- Previsualización de la imagen de la tarjeta -->
-                    <div v-if="props.post.image_card_url" class="mb-4">
-                        <img :src="props.post.image_card_url" alt="Imagen actual de la tarjeta" class="w-64 h-auto" />
-                    </div>
-                    <!-- Input para subir nueva imagen de la tarjeta -->
-                    <div class="mb-4">
-                        <InputLabel for="image_card_url" value="Subir nueva imagen de la tarjeta" />
-                        <!-- <input type="file" @change="(e) => form.image_card_url = e.target.files[0]" id="image_card_url"
-                            name="image_card_url" /> -->
-                        <input type="file" @input="form.image_card_url = $event.target.files[0]" id="image_card_url"
-                            name="image_card_url" class="block w-full mt-1" />
-                        <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url }}</p>
+                        <div class="grow">
+                            <p>Imagen actual de la tarjeta resumen del post</p>
+                            <!-- Previsualización de la imagen de la tarjeta -->
+                            <div v-if="props.post.image_card_url" class="h-40">
+                                <img :src="props.post.image_card_url" alt="Imagen actual de la tarjeta"
+                                    class="w-auto h-28" />
+                            </div>
+                            <!-- Input para subir nueva imagen de la tarjeta -->
+                            <div class="mb-4">
+                                <InputLabel for="image_card_url" value="Subir nueva imagen de la tarjeta (MAX. 5MB)" />
+                                <input type="file" @input="form.image_card_url = $event.target.files[0]"
+                                    id="image_card_url" name="image_card_url"
+                                    class="block w-full mt-1 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:bg-gray-300 file:border-0 file:me-4 file:py-2 file:px-4" />
+                                <p v-if="form.errors.image_card_url" class="text-red-500">{{ form.errors.image_card_url
+                                    }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Resumen -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <div class="flex justify-between">
                             <InputLabel for="summary" value="Resumen" />
                             <div class="flex gap-4 text-xs">
@@ -188,42 +202,36 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                     </div>
 
                     <!-- Contenido del Post (HTML) usando el componente Editor -->
-                    <div class="mb-4">
+                    <div class="mb-8">
                         <InputLabel for="post_html" value="Contenido del Post" />
                         <Editor v-model="form.post_html" />
                         <p v-if="form.errors.post_html" class="text-red-500">{{ form.errors.post_html }}</p>
                     </div>
 
-                    <!-- Fecha de Publicación -->
-                    <div class="mb-4">
-                        <InputLabel for="publish_date" value="Fecha de Publicación" />
-                        <TextInput id="publish_date" v-model="form.publish_date" class="block w-full mt-1"
-                            type="date" />
-                        <p v-if="form.errors.publish_date" class="text-red-500">{{ form.errors.publish_date }}</p>
-                    </div>
+                    <div class="flex gap-3 flex-wrap mb-8">
+                        <!-- Fecha de Publicación -->
+                        <div class="mb-4 grow">
+                            <InputLabel for="publish_date" value="Fecha de Publicación" />
+                            <TextInput id="publish_date" v-model="form.publish_date" class="block w-full mt-1"
+                                type="date" />
+                            <p v-if="form.errors.publish_date" class="text-red-500">{{ form.errors.publish_date }}</p>
+                        </div>
 
-                    <!-- Autor (Select) -->
-                    <div class="mb-4">
-                        <InputLabel for="author_id" value="Autor" />
-                        <select id="author_id" v-model="form.author_id" class="block w-full mt-1">
-                            <option value="" disabled>Selecciona un autor</option>
-                            <option v-for="author in authorOptions" :key="author.id" :value="author.id">
-                                {{ author.name }}
-                            </option>
-                        </select>
-                        <p v-if="form.errors.author_id" class="text-red-500">{{ form.errors.author_id }}</p>
-                    </div>
+                        <!-- Autor (Select) -->
+                        <div class="mb-4 grow">
+                            <InputLabel for="author_id" value="Autor" />
+                            <Select id="author_id" v-model="form.author_id" :options="authorOptions"
+                                :autofocus="true" />
+                            <p v-if="form.errors.author_id" class="text-red-500">{{ form.errors.author_id }}</p>
+                        </div>
 
-                    <!-- Categoría (Select) -->
-                    <div class="mb-4">
-                        <InputLabel for="category_id" value="Categoría" />
-                        <select id="category_id" v-model="form.category_id" class="block w-full mt-1">
-                            <option value="" disabled>Selecciona una categoría</option>
-                            <option v-for="category in categoryOptions" :key="category.id" :value="category.id">
-                                {{ category.name }}
-                            </option>
-                        </select>
-                        <p v-if="form.errors.category_id" class="text-red-500">{{ form.errors.category_id }}</p>
+                        <!-- Categoría (Select) -->
+                        <div class="mb-4 grow">
+                            <InputLabel for="category_id" value="Categoría" />
+                            <Select id="category_id" v-model="form.category_id" :options="categoryOptions"
+                                :autofocus="true" />
+                            <p v-if="form.errors.category_id" class="text-red-500">{{ form.errors.category_id }}</p>
+                        </div>
                     </div>
 
                     <!-- Botón de envío -->

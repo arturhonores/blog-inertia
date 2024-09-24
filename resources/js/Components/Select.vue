@@ -31,7 +31,7 @@ defineExpose({ focus: () => select.value.focus() });
 
 <template>
     <select ref="select"
-        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full"
+        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1"
         :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
         <option value="" disabled>Seleccione una opción</option>
         <option v-for="option in options" :key="option.id" :value="option.id">
