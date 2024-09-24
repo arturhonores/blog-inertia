@@ -21,7 +21,7 @@ const emit = defineEmits(['update:modelValue']);
 const editor = useEditor({
     content:
         props.modelValue ||
-        '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto 🎉</p>',
+        '<p>Puedes escribir aquí el contenido del post, usa los botones de edición para dar formato al texto. Ten presente que el título, la imagen y el resumen se están incluyendo previamente</p>',
     extensions: [
         StarterKit.configure({
             heading: {
@@ -46,7 +46,7 @@ const editor = useEditor({
     editorProps: {
         attributes: {
             class:
-                'border border-gray-300 bg-white focus:outline-indigo-500 p-4 min-h-[20rem] max-h-[20rem] overflow-y-auto',
+                'border border-gray-300 bg-white focus:outline-indigo-500 p-4 min-h-[30rem] max-h-[30rem] overflow-y-auto',
         },
     },
     onUpdate({ editor }) {

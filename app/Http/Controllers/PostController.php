@@ -48,8 +48,8 @@ class PostController extends Controller
             'slug' => 'required|unique:posts,slug',
             'meta_title' => 'required|max:100',
             'meta_description' => 'required|max:200',
-            'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
-            'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',  // Cambiar a validación de archivo
+            'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',
+            'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',
             'post_html' => 'required',
             'summary' => 'required|max:700',
             'publish_date' => 'required|date',
@@ -85,6 +85,8 @@ class PostController extends Controller
         $validatedData['user_id'] = Auth::id();
 
         // Subir imagen del post a S3
+        //image_post_url NO ES URL, ES EL ARCHIVO, cambio de nombre de variable
+        //NECESARIO para próxima versión
         if ($request->hasFile('image_post_url')) {
             $file = $request->file('image_post_url');
             // Almacenar la imagen en la carpeta 'posts'
@@ -95,6 +97,8 @@ class PostController extends Controller
         }
 
         // Subir imagen de la tarjeta a S3
+        //image_card_url NO ES URL, ES EL ARCHIVO, cambio de nombre de variable
+        //NECESARIO para próxima versión
         if ($request->hasFile('image_card_url')) {
             $file = $request->file('image_card_url');
             $route = Storage::disk('s3')->put('cards', $file); // Almacenar la imagen en la carpeta 'cards'
