@@ -50,8 +50,8 @@ class PostController extends Controller
 
         // Manejar las imágenes
         //image_post_url y image_card_url NO SON URL, SON ARCHIVOS, cambio de nombre de variable NECESARIO para próxima versión
-        $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts');
-        $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards');
+        $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts',  $validatedData['slug']);
+        $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards',  $validatedData['slug']);
 
         // Crear el post con los datos validados
         Post::create($validatedData);
@@ -93,14 +93,14 @@ class PostController extends Controller
 
         // Manejar las imágenes
         if ($request->hasFile('image_post_url')) {
-            $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts');
+            $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
             unset($validatedData['image_post_url']);
         }
 
         if ($request->hasFile('image_card_url')) {
-            $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards');
+            $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
             unset($validatedData['image_card_url']);
@@ -120,11 +120,13 @@ class PostController extends Controller
     }
 
     // Función privada para manejar la subida de imágenes a S3
-    private function uploadImage($request, $inputName, $folder)
+    private function uploadImage($request, $inputName, $folder, $slug)
     {
         if ($request->hasFile($inputName)) {
             $file = $request->file($inputName);
-            $path = Storage::disk('s3')->put($folder, $file); // Almacenar la imagen en la carpeta 'cards' o "post" de S3
+            // Usar el slug del post como nombre del archivo, manteniendo la extensión original
+            $fileName = $slug . '.' . $file->getClientOriginalExtension();
+            $path = Storage::disk('s3')->putFileAs($folder, $file, $fileName); // Subir el archivo con el nombre del slug
             return Storage::disk('s3')->url($path); // Retorna la URL pública de la imagen
         }
 
