@@ -119,6 +119,37 @@ class PostController extends Controller
     // Eliminar un post específico de la base de datos
     public function destroy(Post $post)
     {
+        // Verificar si existen imágenes asociadas con el post
+        if ($post->image_post_url) {
+            // Extraer la clave del archivo desde la URL de S3
+            $imagePostPath = parse_url($post->image_post_url, PHP_URL_PATH); // Obtener la ruta
+            $imagePostPath = ltrim($imagePostPath, '/'); // Remover la barra inicial si la hay
+
+            // Eliminar el prefijo 'blogfap/' si está presente
+            $imagePostPath = str_replace('blogfap/', '', $imagePostPath);
+
+            // Debug: Verifica el path que estás intentando eliminar
+            // Log::info('Intentando eliminar la imagen del post en S3 con el path corregido: ' . $imagePostPath);
+
+            // Eliminar la imagen del post de S3
+            Storage::disk('s3')->delete($imagePostPath);
+        }
+
+        if ($post->image_card_url) {
+            // Extraer la clave del archivo desde la URL de S3
+            $imageCardPath = parse_url($post->image_card_url, PHP_URL_PATH); // Obtener la ruta
+            $imageCardPath = ltrim($imageCardPath, '/'); // Remover la barra inicial si la hay
+
+            // Eliminar el prefijo 'blogfap/' si está presente
+            $imageCardPath = str_replace('blogfap/', '', $imageCardPath);
+
+            // Debug: Verifica el path que estás intentando eliminar
+            // Log::info('Intentando eliminar la imagen de la card en S3 con el path corregido: ' . $imageCardPath);
+
+            // Eliminar la imagen de la card de S3
+            Storage::disk('s3')->delete($imageCardPath);
+        }
+
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post eliminado con éxito');
     }
