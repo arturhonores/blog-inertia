@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Tag extends Model
 {
     use HasFactory;
+    // Campos que se pueden asignar masivamente
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
     //relación muchos a muchos
     public function posts(): BelongsToMany
     {

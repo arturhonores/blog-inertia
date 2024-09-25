@@ -23,6 +23,8 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->timestamps();
+            // Unicidad compuesta
+            $table->unique(['post_id', 'tag_id']); // Asegura que no haya duplicados
         });
     }
 

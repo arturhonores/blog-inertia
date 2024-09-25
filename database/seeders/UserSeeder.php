@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
 
         // Crear cada usuario en la base de datos
         foreach ($users as $user) {
-            User::factory()->create($user);
+            User::create($user);
         }
     }
 }

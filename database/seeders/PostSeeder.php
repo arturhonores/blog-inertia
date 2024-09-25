@@ -16,12 +16,7 @@ class PostSeeder extends Seeder
         // Obtener todos los tags creados por el TagSeeder
         $tags = Tag::all();
 
-        // Crear 10 posts utilizando la factory y asignarles de 3 a 5 tags aleatorios
-        Post::factory(10)->create()->each(function ($post) use ($tags) {
-            // Asignar de 3 a 5 tags aleatorios a cada post
-            $post->tags()->attach(
-                $tags->random(rand(3, 5))->pluck('id')->toArray()
-            );
-        });
+        // Crear 10 posts utilizando la factory
+        Post::factory(10)->create();
     }
 }

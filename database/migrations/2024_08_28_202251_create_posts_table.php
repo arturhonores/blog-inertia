@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->index();
+            $table->string('title')->unique();
             $table->string('slug')->unique();
             $table->string('meta_title');
             $table->string('meta_description');
