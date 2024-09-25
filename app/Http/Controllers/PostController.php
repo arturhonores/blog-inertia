@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest; // Importamos el Form Request
 use App\Models\Post;
 use App\Models\Author;
 use App\Models\Category;
@@ -37,74 +37,21 @@ class PostController extends Controller
     }
 
     // Guardar un nuevo post en la base de datos
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         //depuración
-        Log::info('Datos recibidos para crear el post:', $request->all());
+        // Log::info('Datos recibidos para crear el post:', $request->all());
 
         // Validación de los datos
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'slug' => 'required|unique:posts,slug',
-            'meta_title' => 'required|max:100',
-            'meta_description' => 'required|max:200',
-            'image_post_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',
-            'image_card_url' => 'required|file|mimes:jpg,jpeg,png,gif,webp',
-            'post_html' => 'required',
-            'summary' => 'required|max:700',
-            'publish_date' => 'required|date',
-            'author_id' => 'required|exists:authors,id',
-            'category_id' => 'required|exists:categories,id',
-        ], [
-            'title.required' => 'El título es obligatorio.',
-            'title.max' => 'El título no puede tener más de 255 caracteres.',
-            'slug.required' => 'El slug es obligatorio.',
-            'slug.unique' => 'El slug ya está en uso. Por favor, elige otro.',
-            'meta_title.required' => 'El meta título es obligatorio.',
-            'meta_title.max' => 'El meta título no puede tener más de 100 caracteres.',
-            'meta_description.required' => 'La meta descripción es obligatoria.',
-            'meta_description.max' => 'La meta descripción no puede tener más de 200 caracteres.',
-            'image_post_url.required' => 'La imagen del post es obligatoria.',  // Cambiar mensaje de error
-            'image_post_url.file' => 'Debes subir un archivo válido para la imagen del post.', // Validar que sea un archivo
-            'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG, WEBP o GIF.', // Validar formato del archivo
-            'image_card_url.required' => 'La imagen de la tarjeta es obligatoria.',
-            'image_card_url.file' => 'Debes subir un archivo válido para la imagen de la tarjeta.',
-            'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
-            'post_html.required' => 'El contenido del post es obligatorio.',
-            'summary.required' => 'El resumen es obligatorio.',
-            'summary.max' => 'El resumen no puede tener más de 700 caracteres.',
-            'publish_date.required' => 'La fecha de publicación es obligatoria.',
-            'publish_date.date' => 'La fecha de publicación debe tener un formato válido.',
-            'author_id.required' => 'El autor es obligatorio.',
-            'author_id.exists' => 'El autor seleccionado no es válido.',
-            'category_id.required' => 'La categoría es obligatoria.',
-            'category_id.exists' => 'La categoría seleccionada no es válida.',
-        ]);
+        $validatedData = $request->validated();
 
         // Asignar el user_id del usuario autenticado
         $validatedData['user_id'] = Auth::id();
 
-        // Subir imagen del post a S3
-        //image_post_url NO ES URL, ES EL ARCHIVO, cambio de nombre de variable
-        //NECESARIO para próxima versión
-        if ($request->hasFile('image_post_url')) {
-            $file = $request->file('image_post_url');
-            // Almacenar la imagen en la carpeta 'posts'
-            $route = Storage::disk('s3')->put('posts', $file);
-            // Generar URL pública
-            $url = Storage::disk('s3')->url($route);
-            $validatedData['image_post_url'] = $url; // Guardar la URL en la base de datos
-        }
-
-        // Subir imagen de la tarjeta a S3
-        //image_card_url NO ES URL, ES EL ARCHIVO, cambio de nombre de variable
-        //NECESARIO para próxima versión
-        if ($request->hasFile('image_card_url')) {
-            $file = $request->file('image_card_url');
-            $route = Storage::disk('s3')->put('cards', $file); // Almacenar la imagen en la carpeta 'cards'
-            $url = Storage::disk('s3')->url($route); // Generar URL pública
-            $validatedData['image_card_url'] = $url; // Guardar la URL en la base de datos
-        }
+        // Manejar las imágenes
+        //image_post_url y image_card_url NO SON URL, SON ARCHIVOS, cambio de nombre de variable NECESARIO para próxima versión
+        $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts');
+        $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards');
 
         // Crear el post con los datos validados
         Post::create($validatedData);
@@ -133,74 +80,27 @@ class PostController extends Controller
     }
 
     // Actualizar un post existente en la base de datos
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
 
-        Log::info('Datos recibidos para actualizar el post:', $request->all());
+        // Log::info('Datos recibidos para actualizar el post:', $request->all());
 
         // Validación de los datos
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'slug' => 'required|unique:posts,slug,' . $post->id,
-            'meta_title' => 'required|max:100',
-            'meta_description' => 'required|max:200',
-            'image_post_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
-            'image_card_url' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp', // Validar la imagen si es proporcionada
-            'post_html' => 'required',
-            'summary' => 'required|max:700',
-            'publish_date' => 'required|date',
-            'author_id' => 'required|exists:authors,id',
-            'category_id' => 'required|exists:categories,id',
-        ], [
-            'title.required' => 'El título es obligatorio.',
-            'title.max' => 'El título no puede tener más de 255 caracteres.',
-            'slug.required' => 'El slug es obligatorio.',
-            'slug.unique' => 'El slug ya está en uso. Por favor, elige otro.',
-            'meta_title.required' => 'El meta título es obligatorio.',
-            'meta_title.max' => 'El meta título no puede tener más de 100 caracteres.',
-            'meta_description.required' => 'La meta descripción es obligatoria.',
-            'meta_description.max' => 'La meta descripción no puede tener más de 200 caracteres.',
-            'image_post_url.required' => 'La imagen del post es obligatoria.',  // Cambiar mensaje de error
-            'image_post_url.file' => 'Debes subir un archivo válido para la imagen del post.', // Validar que sea un archivo
-            'image_post_url.mimes' => 'La imagen del post debe ser un archivo JPG, PNG, WEBP o GIF.', // Validar formato del archivo
-            'image_card_url.required' => 'La imagen de la tarjeta es obligatoria.',
-            'image_card_url.file' => 'Debes subir un archivo válido para la imagen de la tarjeta.',
-            'image_card_url.mimes' => 'La imagen de la tarjeta debe ser un archivo JPG, PNG, WEBP o GIF.',
-            'post_html.required' => 'El contenido del post es obligatorio.',
-            'summary.required' => 'El resumen es obligatorio.',
-            'summary.max' => 'El resumen no puede tener más de 700 caracteres.',
-            'publish_date.required' => 'La fecha de publicación es obligatoria.',
-            'publish_date.date' => 'La fecha de publicación debe tener un formato válido.',
-            'author_id.required' => 'El autor es obligatorio.',
-            'author_id.exists' => 'El autor seleccionado no es válido.',
-            'category_id.required' => 'La categoría es obligatoria.',
-            'category_id.exists' => 'La categoría seleccionada no es válida.',
-        ]);
+        $validatedData = $request->validated();
 
         // Asignar el user_id del usuario autenticado
         $validatedData['user_id'] = Auth::id();
 
-        // Manejar la imagen del post
+        // Manejar las imágenes
         if ($request->hasFile('image_post_url')) {
-            $file = $request->file('image_post_url');
-            // Almacenar la imagen en la carpeta 'posts' de S3
-            $route = Storage::disk('s3')->put('posts', $file);
-            // Obtener la URL pública de la imagen
-            $url = Storage::disk('s3')->url($route);
-            $validatedData['image_post_url'] = $url;
+            $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts');
         } else {
             // Mantener la imagen existente si no se sube una nueva
             unset($validatedData['image_post_url']);
         }
 
-        // Manejar la imagen de la tarjeta
         if ($request->hasFile('image_card_url')) {
-            $file = $request->file('image_card_url');
-            // Almacenar la imagen en la carpeta 'cards' de S3
-            $route = Storage::disk('s3')->put('cards', $file);
-            // Obtener la URL pública de la imagen
-            $url = Storage::disk('s3')->url($route);
-            $validatedData['image_card_url'] = $url;
+            $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards');
         } else {
             // Mantener la imagen existente si no se sube una nueva
             unset($validatedData['image_card_url']);
@@ -217,5 +117,17 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post eliminado con éxito');
+    }
+
+    // Función privada para manejar la subida de imágenes a S3
+    private function uploadImage($request, $inputName, $folder)
+    {
+        if ($request->hasFile($inputName)) {
+            $file = $request->file($inputName);
+            $path = Storage::disk('s3')->put($folder, $file); // Almacenar la imagen en la carpeta 'cards' o "post" de S3
+            return Storage::disk('s3')->url($path); // Retorna la URL pública de la imagen
+        }
+
+        return null;
     }
 }
