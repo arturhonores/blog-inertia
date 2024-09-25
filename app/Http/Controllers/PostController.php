@@ -79,10 +79,8 @@ class PostController extends Controller
         ]);
     }
 
-    // Actualizar un post existente en la base de datos
     public function update(PostRequest $request, Post $post)
     {
-
         // Log::info('Datos recibidos para actualizar el post:', $request->all());
 
         // Validación de los datos
@@ -92,14 +90,27 @@ class PostController extends Controller
         $validatedData['user_id'] = Auth::id();
 
         // Manejar las imágenes
+        //imagen del post
         if ($request->hasFile('image_post_url')) {
+
+            // Eliminar la imagen anterior de S3
+            if ($post->image_post_url) {
+                Storage::disk('s3')->delete($post->image_post_url);
+            }
+            // Subir la nueva imagen
             $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
             unset($validatedData['image_post_url']);
         }
 
+        //imagen de la card
         if ($request->hasFile('image_card_url')) {
+            // Eliminar la imagen anterior de S3
+            if ($post->image_card_url) {
+                Storage::disk('s3')->delete($post->image_card_url);
+            }
+            // Subir la nueva imagen
             $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
