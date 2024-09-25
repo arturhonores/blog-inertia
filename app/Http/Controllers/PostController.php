@@ -93,11 +93,7 @@ class PostController extends Controller
         //imagen del post
         if ($request->hasFile('image_post_url')) {
 
-            // Eliminar la imagen anterior de S3
-            if ($post->image_post_url) {
-                Storage::disk('s3')->delete($post->image_post_url);
-            }
-            // Subir la nueva imagen
+            // Subir la nueva imagen reemplazando la anterior ya que poseen el mismo slug
             $validatedData['image_post_url'] = $this->uploadImage($request, 'image_post_url', 'posts', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
@@ -106,11 +102,8 @@ class PostController extends Controller
 
         //imagen de la card
         if ($request->hasFile('image_card_url')) {
-            // Eliminar la imagen anterior de S3
-            if ($post->image_card_url) {
-                Storage::disk('s3')->delete($post->image_card_url);
-            }
-            // Subir la nueva imagen
+
+            // Subir la nueva imagen reemplazando la anterior ya que poseen el mismo slug
             $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards', $validatedData['slug']);
         } else {
             // Mantener la imagen existente si no se sube una nueva
