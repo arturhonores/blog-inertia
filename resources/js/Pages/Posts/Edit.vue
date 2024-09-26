@@ -6,6 +6,7 @@ import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import Select from '@/Components/Select.vue';
 import Editor from '@/Components/Editor.vue';
+import MultiSelectTags from '@/Components/MultiSelectTags.vue';
 import { ref, computed, watch } from 'vue';
 import slugify from 'slugify';
 
@@ -13,6 +14,7 @@ const props = defineProps({
     authors: Array,
     categories: Array,
     post: Object, // Recibimos el post a editar
+    tags: Array,
 });
 
 // Límites de caracteres
@@ -34,6 +36,7 @@ const form = useForm({
     publish_date: props.post.publish_date || '',
     author_id: props.post.author_id || '',
     category_id: props.post.category_id || '',
+    tags: props.post.tags.map(tag => tag.id), // Inicializa los tags seleccionados
     //según documentacion de inertia
     _method: 'PUT'
 });
@@ -80,6 +83,12 @@ function submit() {
 // Computed properties para los select de autores y categorías
 const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
 const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
+
+// Computed para transformar los tags en opciones
+const tagOptions = computed(() => props.tags.map(tag => ({
+    value: tag.id,
+    label: tag.name,
+})));
 </script>
 
 
@@ -145,6 +154,13 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                             class="block w-full mt-1" :maxlength="META_DESCRIPTION_MAX_LENGTH" />
                         <p v-if="form.errors.meta_description" class="text-red-500">{{ form.errors.meta_description }}
                         </p>
+                    </div>
+
+                    <!-- Tags (Multiselect) -->
+                    <div class="mb-8">
+                        <InputLabel for="tags" value="Tags" />
+                        <MultiSelectTags :initial-tags="tagOptions" v-model="form.tags" />
+                        <p v-if="form.errors.tags" class="text-red-500">{{ form.errors.tags }}</p>
                     </div>
 
                     <div class="flex gap-3 flex-wrap mb-8">

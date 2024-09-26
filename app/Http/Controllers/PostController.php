@@ -78,14 +78,19 @@ class PostController extends Controller
     // Mostrar formulario para editar un post existente
     public function edit(Post $post)
     {
-        // Obtenemos las categorías y autores para pasarlos al formulario de edición
+        // Obtenemos las categorías, autores y tags para pasarlos al formulario de edición
         $categories = Category::all();
         $authors = Author::all();
+        $tags = Tag::all();
+
+        // Cargar el post con sus tags
+        $post->load('tags');
 
         return Inertia::render('Posts/Edit', [
             'post' => $post,
             'categories' => $categories,
             'authors' => $authors,
+            'tags' => $tags, // Pasamos los tags al frontend
         ]);
     }
 
@@ -122,6 +127,11 @@ class PostController extends Controller
 
         // Actualizar el post con los datos validados
         $post->update($validatedData);
+
+        // Sincronizar los tags (si se envían desde el frontend)
+        if ($request->has('tags')) {
+            $post->tags()->sync($request->input('tags', []));
+        }
 
         return redirect()->route('posts.index')->with('success', 'Post actualizado con éxito');
     }
