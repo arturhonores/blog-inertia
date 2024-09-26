@@ -40,6 +40,8 @@ class PostRequest extends FormRequest
             'publish_date' => 'required|date',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
+            'tags' => 'nullable|array',  // Marcar como opcional
+            'tags.*' => 'nullable|exists:tags,id',  // Asegurarse de que los tags existan si se seleccionan
         ];
     }
 

@@ -6,6 +6,7 @@ use App\Http\Requests\PostRequest; // Importamos el Form Request
 use App\Models\Post;
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -26,13 +27,15 @@ class PostController extends Controller
     // Mostrar formulario de creación de un nuevo post
     public function create()
     {
-        // Obtenemos las categorías y autores para pasarlos al formulario
+        // Obtenemos las categorías,autores y tags para pasarlos al formulario
         $categories = Category::all();
         $authors = Author::all();
+        $tags = Tag::all();
 
         return Inertia::render('Posts/Create', [
             'categories' => $categories,
             'authors' => $authors,
+            'tags' => $tags,
         ]);
     }
 
@@ -54,7 +57,12 @@ class PostController extends Controller
         $validatedData['image_card_url'] = $this->uploadImage($request, 'image_card_url', 'cards',  $validatedData['slug']);
 
         // Crear el post con los datos validados
-        Post::create($validatedData);
+        // Post::create($validatedData); (sin tags)
+        $post = Post::create($validatedData);
+
+
+        // Sincronizar tags
+        $post->tags()->sync($request->input('tags', []));
 
         return redirect()->route('posts.index')->with('success', 'Post creado con éxito');
     }
@@ -62,6 +70,8 @@ class PostController extends Controller
     // Mostrar los detalles de un post específico
     public function show(Post $post)
     {
+        // Cargar los tags asociados al post
+        $post->load('tags');
         return Inertia::render('Posts/Show', ['post' => $post]);
     }
 

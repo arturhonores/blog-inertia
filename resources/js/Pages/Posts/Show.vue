@@ -64,6 +64,16 @@ function deletePost() {
                 </div>
                 <p class="tiptap-p">© {{ new Date(post.publish_date).getFullYear() }} Formación Activa Profesional</p>
             </div>
+            <!-- Mostrar los tags si existen -->
+            <div v-if="post.tags && post.tags.length" class="mt-4">
+                <h3 class="text-lg font-semibold">Tags:</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <span v-for="tag in post.tags" :key="tag.id"
+                        class="bg-indigo-500 text-white text-sm font-semibold py-1 px-3 rounded">
+                        {{ tag.name }}
+                    </span>
+                </div>
+            </div>
         </div>
 
         <!-- Modal de confirmación de eliminación -->

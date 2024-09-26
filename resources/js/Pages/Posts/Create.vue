@@ -6,12 +6,14 @@ import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import Select from '@/Components/Select.vue';
 import Editor from '@/Components/Editor.vue';
+import MultiSelectTags from '@/Components/MultiSelectTags.vue';
 import { ref, computed, watch } from 'vue';
 import slugify from 'slugify'; // generar slug
 
 const props = defineProps({
     authors: Array,
     categories: Array,
+    tags: Array,
 });
 
 // Límite de caracteres para el título
@@ -33,6 +35,7 @@ const form = useForm({
     publish_date: '',
     author_id: '',
     category_id: '',
+    tags: [],
 });
 
 // Estado para el contador de caracteres
@@ -68,6 +71,10 @@ watch(() => form.post_html, (newContent) => {
     //para acciones adicionales cuando el contenido del editor cambie, si es necesario.
 });
 
+//verificar cualquier cambio inesperado en props.tags
+watch(() => props.tags, (newTags) => {
+    console.log('Tags actualizados:', newTags);
+});
 // Función para validar campos y enviar el formulario
 function submit() {
     form.post(route('posts.store'));
@@ -77,6 +84,17 @@ function submit() {
 // Computed properties para los selects
 const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
 const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
+// const tagOptions = computed(() => props.tags.map(tag => ({ id: tag.id, name: tag.name })));
+
+// Transformar los tags para que tengan 'value' y 'label'
+const tagOptions = computed(() => props.tags.map(tag => ({
+    value: tag.id,
+    label: tag.name
+})));
+
+// Agrega el console.log aquí para verificar los datos
+console.log(tagOptions.value); // Verifica si los tags están llegando correctamente
+
 </script>
 
 <template>
@@ -143,6 +161,12 @@ const categoryOptions = computed(() => props.categories.map(category => ({ id: c
                             class="block w-full mt-1" type="text" :maxlength="META_DESCRIPTION_MAX_LENGTH" />
                         <p v-if="form.errors.meta_description" class="text-red-500">{{ form.errors.meta_description }}
                         </p>
+                    </div>
+                    <!-- Tags (Multiselect) -->
+                    <div class="mb-8">
+                        <InputLabel for="tags" value="Tags" />
+                        <MultiSelectTags :initial-tags="tagOptions" v-model="form.tags" />
+                        <p v-if="form.errors.tags" class="text-red-500">{{ form.errors.tags }}</p>
                     </div>
 
                     <div class="flex gap-3 flex-wrap mb-8">
