@@ -19,7 +19,7 @@ const props = defineProps({
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-7">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="post in posts" :key="post.id" class="bg-white p-6 rounded-lg shadow-lg">
-          <div class="h-[247px] w-full">
+          <div class="h-[247px] w-full mb-3">
             <img :src="post.image_card_url" alt="Card Image" class="h-full w-full object-cover rounded-md mb-4" />
           </div>
           <h2 class="text-xl font-semibold mb-2">{{ post.title }}</h2>

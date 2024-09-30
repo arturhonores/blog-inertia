@@ -50,16 +50,12 @@ function handleImageError() {
                         </Link>
 
                         <Link v-if="canRegister" :href="route('register')"
-                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] lg:text-white">
+                            class="hidden rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] lg:text-white">
                         Registrarse
                         </Link>
                     </template>
                 </nav>
             </header>
-
-            <main class="mt-6">
-                <!-- Main content -->
-            </main>
 
             <footer class="py-16 text-center text-sm text-black">
                 <p>BlogFap 1.0</p>
