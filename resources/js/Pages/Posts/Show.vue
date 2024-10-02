@@ -60,18 +60,20 @@ function deletePost() {
                 <img class="w-full h-auto" :src="post.image_post_url" alt="">
                 <div v-html="post.post_html" class="my-3 tiptap"></div>
                 <div class="w-16 mt-8">
-                    <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundo.png" alt="mundo" width="100%">
+                    <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundoPost.webp" alt="mundo" width="100%">
                 </div>
                 <p class="tiptap-p">© {{ new Date(post.publish_date).getFullYear() }} Formación Activa Profesional</p>
             </div>
             <!-- Mostrar los tags si existen -->
             <div v-if="post.tags && post.tags.length" class="mt-4">
-                <h3 class="text-lg font-semibold">Tags:</h3>
-                <div class="flex gap-2 flex-wrap">
-                    <span v-for="tag in post.tags" :key="tag.id"
-                        class="bg-indigo-500 text-white text-sm font-semibold py-1 px-3 rounded">
-                        {{ tag.name }}
-                    </span>
+                <div class="flex gap-2">
+                    <h3 class="text-lg">Tags:</h3>
+                    <div class="flex gap-2 flex-wrap">
+                        <span v-for="tag in post.tags" :key="tag.id"
+                            class="bg-indigo-500 text-white text-sm font-semibold py-1 px-3 rounded">
+                            {{ tag.name }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -14,9 +14,9 @@ class AuthorSeeder extends Seeder
     public function run(): void
     {
         $authors = [
-            ['name' => 'joel', 'biography' => 'Biografía de Joel...'],
-            ['name' => 'gemma', 'biography' => 'Biografía de Gemma...'],
-            ['name' => 'manuel', 'biography' => 'Biografía de Manuel...'],
+            ['name' => 'Joel Delgado', 'biography' => 'Biografía de Joel...'],
+            ['name' => 'Gemma López', 'biography' => 'Biografía de Gemma...'],
+            ['name' => 'Manuel Quintero', 'biography' => 'Biografía de Manuel...'],
         ];
 
         foreach ($authors as $author) {
