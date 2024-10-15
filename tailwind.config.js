@@ -1,7 +1,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
-
+//para customizar el multiselect
 const svgToDataUri = require('mini-svg-data-uri')
 
 
@@ -17,7 +17,6 @@ export default {
     safelist: [
         'bg-neutral-900',
         'text-white',
-        // Agrega aquí cualquier otra clase que necesites
     ],
     theme: {
         extend: {

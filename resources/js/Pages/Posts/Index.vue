@@ -1,6 +1,9 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { CalendarDays } from 'lucide-vue-next';
+import TextInput from '@/Components/TextInput.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 
 // Definir las props que se reciben desde el backend
 const props = defineProps({
@@ -11,9 +14,30 @@ const props = defineProps({
 <template>
   <AppLayout title="Posts">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Últimos Posts
-      </h2>
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-y-4 md:gap-4">
+        <div class="w-full md:w-1/2 md:pr-4">
+          <TextInput class="w-full" placeholder="Buscar por título" />
+        </div>
+        <div
+          class="flex justify-center md:justify-end items-center gap-4 w-full md:w-1/2 flex-wrap sm:flex-nowrap sm:pl-4">
+          <div class="flex items-center gap-2">
+            <Checkbox id="caninos" />
+            <InputLabel for="caninos" value="Caninos" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="sanitarios" />
+            <InputLabel for="sanitarios" value="Sanitarios" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="infantil" />
+            <InputLabel for="infantil" value="Infantil" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox id="oposiciones" />
+            <InputLabel for="oposiciones" value="Oposiciones" />
+          </div>
+        </div>
+      </div>
     </template>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-7">
