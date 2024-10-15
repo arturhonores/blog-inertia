@@ -1,4 +1,7 @@
 <script setup>
+import { watch } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { useDebounce } from '@/utils/debounce';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { CalendarDays } from 'lucide-vue-next';
 import TextInput from '@/Components/TextInput.vue';
@@ -7,8 +10,39 @@ import InputLabel from '@/Components/InputLabel.vue';
 
 // Definir las props que se reciben desde el backend
 const props = defineProps({
-  posts: Array, // Definir el tipo de la propiedad posts como un Array
+  posts: Array,
+  filters: Object,
 });
+
+// Usar useForm para manejar los filtros
+const form = useForm({
+  search: props.filters.search || '',
+  categories: props.filters.categories || [],
+});
+
+// Método para manejar la selección de categorías
+const toggleCategory = (categoryId) => {
+  if (form.categories.includes(categoryId)) {
+    // Eliminar la categoría si ya está seleccionada
+    form.categories = form.categories.filter(id => id !== categoryId);
+  } else {
+    // Agregar la categoría si no está seleccionada
+    form.categories.push(categoryId);
+  }
+  applyFilters();  // Aplicar filtros inmediatamente después de cambiar la categoría
+};
+
+// Función para aplicar los filtros con debounce
+const applyFilters = useDebounce(() => {
+  form.get('/posts', {
+    preserveState: true,
+    replace: true,
+  });
+}, 300); // 300ms de debounce
+
+// Watch para monitorear los cambios en los filtros de búsqueda
+watch(() => form.search, applyFilters);
+
 </script>
 
 <template>
@@ -16,24 +50,24 @@ const props = defineProps({
     <template #header>
       <div class="flex flex-col sm:flex-row justify-between items-center gap-y-4 md:gap-4">
         <div class="w-full md:w-1/2 md:pr-4">
-          <TextInput class="w-full" placeholder="Buscar por título" />
+          <TextInput v-model="form.search" class="w-full" placeholder="Buscar por título" />
         </div>
         <div
           class="flex justify-center md:justify-end items-center gap-4 w-full md:w-1/2 flex-wrap sm:flex-nowrap sm:pl-4">
           <div class="flex items-center gap-2">
-            <Checkbox id="caninos" />
+            <Checkbox id="caninos" :checked="form.categories.includes(2)" @update:checked="toggleCategory(2)" />
             <InputLabel for="caninos" value="Caninos" />
           </div>
           <div class="flex items-center gap-2">
-            <Checkbox id="sanitarios" />
+            <Checkbox id="sanitarios" :checked="form.categories.includes(3)" @update:checked="toggleCategory(3)" />
             <InputLabel for="sanitarios" value="Sanitarios" />
           </div>
           <div class="flex items-center gap-2">
-            <Checkbox id="infantil" />
+            <Checkbox id="infantil" :checked="form.categories.includes(4)" @update:checked="toggleCategory(4)" />
             <InputLabel for="infantil" value="Infantil" />
           </div>
           <div class="flex items-center gap-2">
-            <Checkbox id="oposiciones" />
+            <Checkbox id="oposiciones" :checked="form.categories.includes(1)" @update:checked="toggleCategory(1)" />
             <InputLabel for="oposiciones" value="Oposiciones" />
           </div>
         </div>

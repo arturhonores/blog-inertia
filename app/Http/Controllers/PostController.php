@@ -10,18 +10,48 @@ use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 //para depuración
 use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
     // Mostrar lista de posts
-    public function index()
+    public function index(Request $request)
     {
-        // Obtenemos los primeros 10 posts ordenados por fecha de publicación
-        $posts = Post::orderBy('publish_date', 'desc')->get();
-        //inicial
-        return Inertia::render('Posts/Index', ['posts' => $posts]);
+        // Obtener los filtros de la request
+        $categories = $request->input('categories', []);
+        $search = $request->input('search', '');
+
+        // Asegurarnos de que $categories sea siempre un array
+        if (!is_array($categories)) {
+            $categories = explode(',', $categories);
+        }
+
+        // Construimos la consulta base para los posts
+        $query = Post::query();
+
+        // Si hay categorías seleccionadas, filtramos por esas categorías
+        if (!empty($categories)) {
+            $query->whereIn('category_id', $categories);
+        }
+
+        // Si hay una búsqueda por título, filtramos por el título
+        if (!empty($search)) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Obtenemos los posts filtrados ordenados por fecha de publicación
+        $posts = $query->orderBy('publish_date', 'desc')->get();
+
+        // Retornamos la vista con los posts y las categorías seleccionadas
+        return Inertia::render('Posts/Index', [
+            'posts' => $posts,
+            'filters' => [
+                'categories' => $categories,
+                'search' => $search,
+            ],
+        ]);
     }
 
     // Mostrar formulario de creación de un nuevo post
