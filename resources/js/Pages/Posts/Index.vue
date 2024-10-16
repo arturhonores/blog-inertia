@@ -1,5 +1,6 @@
+<!-- index.vue -->
 <script setup>
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { useDebounce } from '@/utils/debounce';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -7,29 +8,45 @@ import { CalendarDays } from 'lucide-vue-next';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 // Definir las props que se reciben desde el backend
 const props = defineProps({
-  posts: Array,
+  posts: Object,
   filters: Object,
 });
 
-// Usar useForm para manejar los filtros
+// Definir todas las categorías disponibles
+const allCategories = ref([
+  { id: 1, name: 'Oposiciones' },
+  { id: 2, name: 'Caninos' },
+  { id: 3, name: 'Sanitarios' },
+  { id: 4, name: 'Infantil' },
+]);
+
+// Usar useForm para manejar los filtros y establecer los valores iniciales
 const form = useForm({
   search: props.filters.search || '',
-  categories: props.filters.categories || [],
+  categories: [...(props.filters.categories || []).map(id => Number(id))],
+});
+
+// Watch para sincronizar el estado del formulario si las props cambian (por ejemplo, al cambiar de página)
+watch(() => props.filters, () => {
+  form.search = props.filters.search || '';
+  form.categories = [...(props.filters.categories || []).map(id => Number(id))];
 });
 
 // Método para manejar la selección de categorías
-const toggleCategory = (categoryId) => {
-  if (form.categories.includes(categoryId)) {
-    // Eliminar la categoría si ya está seleccionada
-    form.categories = form.categories.filter(id => id !== categoryId);
+const toggleCategory = (categoryId, value) => {
+  if (value) {
+    if (!form.categories.includes(categoryId)) {
+      form.categories.push(categoryId);
+    }
   } else {
-    // Agregar la categoría si no está seleccionada
-    form.categories.push(categoryId);
+    form.categories = form.categories.filter(id => id !== categoryId);
   }
-  applyFilters();  // Aplicar filtros inmediatamente después de cambiar la categoría
+
+  applyFilters();
 };
 
 // Función para aplicar los filtros con debounce
@@ -40,9 +57,8 @@ const applyFilters = useDebounce(() => {
   });
 }, 300);
 
-// Watch para monitorear los cambios en los filtros de búsqueda
+// Watch para monitorear los cambios en los filtros de búsqueda y aplicarlos con debounce
 watch(() => form.search, applyFilters);
-
 </script>
 
 <template>
@@ -54,29 +70,18 @@ watch(() => form.search, applyFilters);
         </div>
         <div
           class="flex justify-center md:justify-end items-center gap-4 w-full md:w-1/2 flex-wrap sm:flex-nowrap sm:pl-4">
-          <div class="flex items-center gap-2">
-            <Checkbox id="caninos" :checked="form.categories.includes(2)" @update:checked="toggleCategory(2)" />
-            <InputLabel for="caninos" value="Caninos" />
-          </div>
-          <div class="flex items-center gap-2">
-            <Checkbox id="sanitarios" :checked="form.categories.includes(3)" @update:checked="toggleCategory(3)" />
-            <InputLabel for="sanitarios" value="Sanitarios" />
-          </div>
-          <div class="flex items-center gap-2">
-            <Checkbox id="infantil" :checked="form.categories.includes(4)" @update:checked="toggleCategory(4)" />
-            <InputLabel for="infantil" value="Infantil" />
-          </div>
-          <div class="flex items-center gap-2">
-            <Checkbox id="oposiciones" :checked="form.categories.includes(1)" @update:checked="toggleCategory(1)" />
-            <InputLabel for="oposiciones" value="Oposiciones" />
+          <div v-for="category in allCategories" :key="category.id" class="flex items-center gap-2">
+            <Checkbox :checked="form.categories.includes(category.id)"
+              @update:checked="value => toggleCategory(category.id, value)" />
+            <InputLabel :value="category.name" />
           </div>
         </div>
       </div>
     </template>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-7">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="post in posts" :key="post.id" class="bg-white p-6 rounded-lg shadow-lg">
+      <div v-if="posts.data && posts.data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="post in posts.data" :key="post.id" class="bg-white p-6 rounded-lg shadow-lg">
           <div class="h-[247px] w-full mb-3">
             <img :src="post.image_card_url" alt="Card Image" class="h-full w-full object-cover rounded-md mb-4" />
           </div>
@@ -94,10 +99,13 @@ watch(() => form.search, applyFilters);
             }}</p>
           </div>
           <p class="text-gray-700 truncate-resumen-card">{{ post.summary }}</p>
-          <a :href="`/posts/${post.id}`" class="text-blue-500 hover:underline mt-2 inline-block">Ver post</a>
+          <a :href="`/posts/${post.id}`" class="text-indigo-500 hover:underline mt-2 inline-block">Ver post</a>
         </div>
       </div>
+      <div v-else class="text-center text-gray-500">
+        No hay posts disponibles con los filtros aplicados.
+      </div>
+      <Pagination :links="posts.links" />
     </div>
-
   </AppLayout>
 </template>

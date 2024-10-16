@@ -41,8 +41,13 @@ class PostController extends Controller
             $query->where('title', 'like', '%' . $search . '%');
         }
 
-        // Obtenemos los posts filtrados ordenados por fecha de publicación
-        $posts = $query->orderBy('publish_date', 'desc')->get();
+        // Obtenemos los posts filtrados ordenados por fecha de publicación y aplicamos la paginación
+        $posts = $query->orderBy('publish_date', 'desc')
+            ->paginate(9)
+            ->appends([
+                'search' => $search,
+                'categories' => $categories,
+            ]);
 
         // Retornamos la vista con los posts y las categorías seleccionadas
         return Inertia::render('Posts/Index', [
