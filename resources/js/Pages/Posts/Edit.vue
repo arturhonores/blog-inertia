@@ -41,6 +41,9 @@ const form = useForm({
     _method: 'PUT'
 });
 
+// Estado para controlar el envío
+const isSubmitting = ref(false);
+
 // Estado para los contadores de caracteres
 const titleLength = ref(form.title.length);
 const metaTitleLength = ref(form.meta_title.length);
@@ -69,15 +72,29 @@ watch(() => form.summary, (newSummary) => {
 });
 
 // Función para enviar la actualización del formulario
-function submit() {
-    form.post(route('posts.update', props.post.id), {
-        onSuccess: () => {
-            console.log('Post actualizado con éxito.');
-        },
-        onError: (errors) => {
-            console.error('Errores de validación:', errors);
-        }
-    });
+// function submit() {
+//     form.post(route('posts.update', props.post.id), {
+//         onSuccess: () => {
+//             console.log('Post actualizado con éxito.');
+//         },
+//         onError: (errors) => {
+//             console.error('Errores de validación:', errors);
+//         }
+//     });
+// }
+
+// Función para enviar la actualización del formulario
+async function submit() {
+    if (isSubmitting.value) return;
+
+    isSubmitting.value = true;
+    try {
+        await form.post(route('posts.update', props.post.id));
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isSubmitting.value = false;
+    }
 }
 
 // Computed properties para los select de autores y categorías
@@ -252,8 +269,22 @@ const tagOptions = computed(() => props.tags.map(tag => ({
 
                     <!-- Botón de envío -->
                     <div class="mt-4">
-                        <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Actualizar
-                            Post</button>
+                        <!-- <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Actualizar
+                            Post</button> -->
+                        <button type="submit" :disabled="isSubmitting"
+                            class="flex items-center px-4 py-2 bg-indigo-500 text-white rounded-lg">
+                            <svg v-if="isSubmitting" class="animate-spin h-5 w-5 mr-2 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+                                </path>
+                            </svg>
+                            {{ isSubmitting ? 'Actualizando...' : 'Actualizar Post' }}
+                        </button>
                     </div>
                 </form>
             </div>

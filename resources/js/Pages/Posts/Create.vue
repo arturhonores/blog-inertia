@@ -38,6 +38,9 @@ const form = useForm({
     tags: [],
 });
 
+// Estado para controlar el envío
+const isSubmitting = ref(false);
+
 // Estado para el contador de caracteres
 const titleLength = ref(0);
 const metaTitleLength = ref(0);
@@ -76,15 +79,27 @@ watch(() => props.tags, (newTags) => {
     console.log('Tags actualizados:', newTags);
 });
 // Función para validar campos y enviar el formulario
-function submit() {
-    form.post(route('posts.store'));
+// function submit() {
+//     form.post(route('posts.store'));
+// }
+// Función para validar campos y enviar el formulario
+async function submit() {
+    if (isSubmitting.value) return;
+
+    isSubmitting.value = true;
+    try {
+        await form.post(route('posts.store'));
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isSubmitting.value = false;
+    }
 }
 
 
 // Computed properties para los selects
 const authorOptions = computed(() => props.authors.map(author => ({ id: author.id, name: author.name })));
 const categoryOptions = computed(() => props.categories.map(category => ({ id: category.id, name: category.name })));
-// const tagOptions = computed(() => props.tags.map(tag => ({ id: tag.id, name: tag.name })));
 
 // Transformar los tags para que tengan 'value' y 'label'
 const tagOptions = computed(() => props.tags.map(tag => ({
@@ -92,8 +107,6 @@ const tagOptions = computed(() => props.tags.map(tag => ({
     label: tag.name
 })));
 
-// Agrega el console.log aquí para verificar los datos
-console.log(tagOptions.value); // Verifica si los tags están llegando correctamente
 
 </script>
 
@@ -238,8 +251,22 @@ console.log(tagOptions.value); // Verifica si los tags están llegando correctam
 
                     <!-- Botón de envío -->
                     <div class="mt-4">
-                        <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Guardar
-                            Post</button>
+                        <!-- <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded-lg">Guardar
+                            Post</button> -->
+                        <button type="submit" :disabled="isSubmitting"
+                            class="flex items-center px-4 py-2 bg-indigo-500 text-white rounded-lg">
+                            <svg v-if="isSubmitting" class="animate-spin h-5 w-5 mr-2 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+                                </path>
+                            </svg>
+                            {{ isSubmitting ? 'Guardando...' : 'Guardar Post' }}
+                        </button>
                     </div>
                 </form>
             </div>

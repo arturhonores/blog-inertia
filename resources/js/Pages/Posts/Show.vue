@@ -57,7 +57,7 @@ function deletePost() {
                     year: "numeric"
                 })
                     }}</p>
-                <img class="w-full h-auto" :src="post.image_post_url" alt="">
+                <img class="w-full h-auto rounded-xl" :src="post.image_post_url" alt="imagen del post">
                 <div v-html="post.post_html" class="my-3 tiptap"></div>
                 <div class="w-16 mt-8">
                     <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundoPost.webp" alt="mundo" width="100%">

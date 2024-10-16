@@ -38,7 +38,7 @@ const applyFilters = useDebounce(() => {
     preserveState: true,
     replace: true,
   });
-}, 300); // 300ms de debounce
+}, 300);
 
 // Watch para monitorear los cambios en los filtros de búsqueda
 watch(() => form.search, applyFilters);
