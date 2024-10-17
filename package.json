@@ -29,7 +29,9 @@
         "@tiptap/starter-kit": "^2.7.0",
         "@tiptap/vue-3": "^2.7.0",
         "@vueform/multiselect": "^2.6.10",
+        "chart.js": "^4.4.5",
         "lucide-vue-next": "^0.441.0",
-        "slugify": "^1.6.6"
+        "slugify": "^1.6.6",
+        "vue-chartjs": "^5.3.1"
     }
 }

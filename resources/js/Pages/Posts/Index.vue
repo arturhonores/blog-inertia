@@ -79,7 +79,7 @@ watch(() => form.search, applyFilters);
       </div>
     </template>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-7">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
       <div v-if="posts.data && posts.data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="post in posts.data" :key="post.id" class="bg-white p-6 rounded-lg shadow-lg">
           <div class="h-[247px] w-full mb-3">
