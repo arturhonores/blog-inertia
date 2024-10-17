@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 Request::HEADER_X_FORWARDED_AWS_ELB
         );
 
-        // Configurar hosts de confianza si es necesario
+        // Configurar hosts de confianza
         $middleware->trustHosts(
             at: ['invigorating-light-production.up.railway.app']
         );
