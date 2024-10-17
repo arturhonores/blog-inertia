@@ -9,7 +9,13 @@ const props = defineProps({
 
 // Función para construir la URL de paginación con los filtros aplicados
 function buildUrl(baseUrl) {
-    const url = new URL(baseUrl, window.location.origin);
+    // Detectar si estamos en producción o desarrollo
+    const isProduction = import.meta.env.PROD; // Detecta si Vite está en modo producción
+
+    // Construir la URL con el esquema correcto según el entorno
+    const url = new URL(baseUrl, isProduction ? 'https://' + window.location.host : window.location.origin);
+
+    // const url = new URL(baseUrl, window.location.origin);
     if (props.search) {
         url.searchParams.set('search', props.search);
     }
