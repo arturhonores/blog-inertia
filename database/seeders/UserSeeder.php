@@ -34,6 +34,11 @@ class UserSeeder extends Seeder
                 'email' => 'joel.delgado@formacionactivaprofesional.com',
                 'password' => bcrypt('joel1234'),
             ],
+            [
+                'name' => 'evelyn',
+                'email' => 'evelyn.hernandez@formacionactivaprofesional.com',
+                'password' => bcrypt('evelyn1234'),
+            ],
         ];
 
         // Crear cada usuario en la base de datos

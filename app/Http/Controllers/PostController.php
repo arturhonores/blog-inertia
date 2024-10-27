@@ -183,7 +183,8 @@ class PostController extends Controller
             $imagePostPath = ltrim($imagePostPath, '/'); // Remover la barra inicial si la hay
 
             // Eliminar el prefijo 'blogfap/' si está presente
-            $imagePostPath = str_replace('blogfap/', '', $imagePostPath);
+            // $imagePostPath = str_replace('blogfap/', '', $imagePostPath);
+            $imagePostPath = str_replace('blog-fap/', '', $imagePostPath);
 
             // Debug: Verifica el path que estás intentando eliminar
             // Log::info('Intentando eliminar la imagen del post en S3 con el path corregido: ' . $imagePostPath);
@@ -198,7 +199,8 @@ class PostController extends Controller
             $imageCardPath = ltrim($imageCardPath, '/'); // Remover la barra inicial si la hay
 
             // Eliminar el prefijo 'blogfap/' si está presente
-            $imageCardPath = str_replace('blogfap/', '', $imageCardPath);
+            // $imageCardPath = str_replace('blogfap/', '', $imageCardPath);
+            $imageCardPath = str_replace('blog-fap/', '', $imageCardPath);
 
             // Debug: Verifica el path que estás intentando eliminar
             // Log::info('Intentando eliminar la imagen de la card en S3 con el path corregido: ' . $imageCardPath);
