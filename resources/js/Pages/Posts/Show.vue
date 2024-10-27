@@ -39,10 +39,10 @@ function deletePost() {
                 <div class="flex gap-4">
                     <a :href="route('posts.edit', post.id)"
                         class="flex items-center gap-1 cursor-pointer text-green-600"><span><img
-                                src="https://blogfap.s3.eu-north-1.amazonaws.com/edit-icon.svg" alt="edit icon"
+                                src="https://blog-fap.s3.eu-west-3.amazonaws.com/edit-icon.svg" alt="edit icon"
                                 width="16px"></span><span>Editar</span></a>
                     <a @click="confirmDelete" class="flex items-center gap-1 cursor-pointer text-red-600"><span><img
-                                src="https://blogfap.s3.eu-north-1.amazonaws.com/delete-icon.svg" alt="edit icon"
+                                src="https://blog-fap.s3.eu-west-3.amazonaws.com/delete-icon.svg" alt="delete icon"
                                 width="16px"></span><span>Eliminar</span></a>
                 </div>
             </div>
@@ -60,7 +60,7 @@ function deletePost() {
                 <img class="w-full h-auto rounded-xl" :src="post.image_post_url" alt="imagen del post">
                 <div v-html="post.post_html" class="my-3 tiptap"></div>
                 <div class="w-16 mt-8">
-                    <img src="https://blogfap.s3.eu-north-1.amazonaws.com/mundoPost.webp" alt="mundo" width="100%">
+                    <img src="https://blog-fap.s3.eu-west-3.amazonaws.com/mundoPost.webp" alt="mundo" width="100%">
                 </div>
                 <p class="tiptap-p">© {{ new Date(post.publish_date).getFullYear() }} Formación Activa Profesional</p>
             </div>

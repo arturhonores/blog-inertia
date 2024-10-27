@@ -30,12 +30,12 @@ function handleImageError() {
 
     <Head title="Welcome" />
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
-        style="background-image: url('https://blogfap.s3.eu-north-1.amazonaws.com/fondo-blogfap.svg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        style="background-image: url('https://blog-fap.s3.eu-west-3.amazonaws.com/fondo-blogfap.svg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
         <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
             <header class="grid grid-cols-1 items-center gap-2 py-10 lg:grid-cols-3">
                 <div class="flex justify-center lg:col-start-2">
-                    <img src="https://blogfap.s3.eu-north-1.amazonaws.com/LOGOS_FAP_Negro.png" alt="logo FAP"
+                    <img src="https://blog-fap.s3.eu-west-3.amazonaws.com/LOGOS_FAP_Negro.png" alt="logo FAP"
                         width="180px">
                 </div>
                 <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-center lg:justify-end">
