@@ -51,14 +51,18 @@ const toggleCategory = (categoryId, value) => {
 
 // Función para aplicar los filtros con debounce
 const applyFilters = useDebounce(() => {
+  // console.log("applyFilters ejecutado después del debounce");
   form.get('/posts', {
     preserveState: true,
     replace: true,
   });
-}, 300);
+}, 500);
 
 // Watch para monitorear los cambios en los filtros de búsqueda y aplicarlos con debounce
-watch(() => form.search, applyFilters);
+watch(() => form.search, () => {
+  // console.log("Cambio en form.search detectado");
+  applyFilters();
+});
 </script>
 
 <template>

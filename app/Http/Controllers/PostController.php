@@ -11,6 +11,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; // para dashboard
+
 //para depuración
 use Illuminate\Support\Facades\Log;
 
@@ -221,5 +223,38 @@ class PostController extends Controller
         }
 
         return null;
+    }
+
+    public function dashboard()
+    {
+        $postsByYear = DB::table('posts')
+            ->selectRaw('YEAR(publish_date) as year, COUNT(*) as count')
+            ->groupBy('year')
+            ->orderByDesc('year')
+            ->get();
+
+        // Nueva consulta: obtener posts de 2024 agrupados por categoría
+        $postsByCategory2024 = DB::table('posts')
+            ->join('categories', 'posts.category_id', '=', 'categories.id')
+            ->selectRaw('categories.name as category, COUNT(posts.id) as count')
+            ->whereYear('publish_date', 2024)
+            ->groupBy('category')
+            ->get();
+
+        // Nueva consulta: obtener la cantidad de posts por tag solo del año 2024
+        $postsByTag2024 = DB::table('tags')
+            ->join('post_tag', 'tags.id', '=', 'post_tag.tag_id')
+            ->join('posts', 'posts.id', '=', 'post_tag.post_id')
+            ->selectRaw('tags.name as tag, COUNT(post_tag.post_id) as count')
+            ->whereYear('posts.publish_date', 2024) // Filtra por el año 2024
+            ->groupBy('tags.name')
+            ->orderByDesc('count')
+            ->get();
+
+        return Inertia::render('Dashboard', [
+            'postsByYear' => $postsByYear,
+            'postsByCategory2024' => $postsByCategory2024,
+            'postsByTag2024' => $postsByTag2024
+        ]);
     }
 }

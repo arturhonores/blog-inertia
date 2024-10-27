@@ -20,9 +20,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Nueva ruta al método dashboard en PostController
+    Route::get('/dashboard', [PostController::class, 'dashboard'])->name('dashboard');
 
     Route::resource('posts', PostController::class);
 });

@@ -1,6 +1,23 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
+import { defineProps } from 'vue';
+
+const props = defineProps({
+    postsByYear: {
+        type: Array,
+        required: true
+    },
+    postsByCategory2024: {
+        type: Array,
+        required: true
+    },
+    postsByTag2024: {
+        type: Array,
+        required: true
+    }
+});
+
 </script>
 
 <template>
@@ -14,7 +31,8 @@ import Welcome from '@/Components/Welcome.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
+                    <Welcome :postsByYear="postsByYear" :postsByCategory2024="postsByCategory2024"
+                        :postsByTag2024="postsByTag2024" />
                 </div>
             </div>
         </div>
